@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { projects } from "@/data/projects";
+import logo from "@/assets/logo.jpeg";
 
 const Footer = () => {
   return (
@@ -8,9 +9,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div className="space-y-4">
-            <span className="text-2xl font-serif font-bold gold-gradient-text tracking-wider">
-              CHASE2SUCCESS
-            </span>
+            <img src={logo} alt="CHASE2SUCCESS Logo" className="h-14 w-auto" />
             <p className="text-sm text-muted-foreground font-sans leading-relaxed">
               Premium luxury real estate advisory, connecting discerning investors with exceptional properties across India.
             </p>

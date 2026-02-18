@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import logo from "@/assets/logo.jpeg";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -20,9 +21,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <Link to="/" className="flex items-center gap-2">
-            <span className="text-2xl font-serif font-bold gold-gradient-text tracking-wider">
-              CHASE2SUCCESS
-            </span>
+            <img src={logo} alt="CHASE2SUCCESS Logo" className="h-12 w-auto" />
           </Link>
 
           {/* Desktop Nav */}
