@@ -4,8 +4,8 @@ import heroBg from "@/assets/hero-bg.jpg";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background */}
+    <section className="relative h-screen flex flex-col overflow-hidden">
+      {/* Full-bleed hero image */}
       <div className="absolute inset-0">
         <img
           src={heroBg}
@@ -13,29 +13,26 @@ const HeroSection = () => {
           className="w-full h-full object-cover"
           loading="eager"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 max-w-5xl mx-auto px-4 text-center">
-        <p className="text-primary font-sans text-sm md:text-base tracking-[0.3em] uppercase mb-6 animate-fade-up">
-          Premium Real Estate Advisory
+      {/* Content — pinned to bottom with generous whitespace */}
+      <div className="relative z-10 mt-auto pb-20 md:pb-28 lg:pb-32 px-6 sm:px-10 lg:px-16 max-w-6xl">
+        <p className="text-primary/80 font-sans text-[11px] md:text-xs tracking-[0.4em] uppercase mb-5 animate-fade-up">
+          Real Estate Advisory
         </p>
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-bold leading-tight mb-6 animate-fade-up-delay-1">
-          Where Luxury Meets{" "}
-          <span className="gold-gradient-text">Smart Investment</span>
+        <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-serif font-bold leading-[0.95] tracking-tight mb-8 animate-fade-up-delay-1">
+          Where Luxury<br />
+          Meets <span className="gold-gradient-text">Investment</span>
         </h1>
-        <p className="text-lg md:text-xl text-muted-foreground font-sans mb-10 max-w-2xl mx-auto animate-fade-up-delay-2">
-          Premium Plots · Farmhouses · Luxury Residences
-        </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up-delay-2">
+        <div className="flex items-center gap-5 animate-fade-up-delay-2">
           <Link to="/projects">
-            <Button size="lg" className="gold-gradient text-primary-foreground font-semibold px-8 py-6 text-base hover:opacity-90 transition-opacity">
+            <Button size="lg" className="gold-gradient text-primary-foreground font-semibold px-10 py-6 text-sm tracking-wide hover:opacity-90 transition-opacity">
               View Projects
             </Button>
           </Link>
           <a href="#enquiry">
-            <Button size="lg" variant="outline" className="border-primary text-primary px-8 py-6 text-base hover:bg-primary hover:text-primary-foreground transition-all">
+            <Button size="lg" variant="outline" className="border-foreground/20 text-foreground px-10 py-6 text-sm tracking-wide hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all">
               Enquire Now
             </Button>
           </a>
