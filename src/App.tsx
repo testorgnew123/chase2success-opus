@@ -25,6 +25,7 @@ import AdminProjects from "./pages/admin/AdminProjects";
 import AdminBlogs from "./pages/admin/AdminBlogs";
 import AdminEnquiries from "./pages/admin/AdminEnquiries";
 import AdminTestimonials from "./pages/admin/AdminTestimonials";
+import AdminSetup from "./pages/AdminSetup";
 
 const queryClient = new QueryClient();
 
@@ -73,6 +74,7 @@ const App = () => (
             <PageTracker />
             <Routes>
               <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/admin/setup" element={<AdminSetup />} />
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<AdminDashboard />} />
                 <Route path="projects" element={<AdminProjects />} />
