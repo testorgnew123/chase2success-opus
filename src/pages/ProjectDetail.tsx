@@ -1,9 +1,60 @@
 import { useParams, Link } from "react-router-dom";
-import { MapPin, ArrowLeft, Download } from "lucide-react";
+import {
+  MapPin, ArrowLeft, Download, ShieldCheck, Trees, Waves, Home,
+  Dumbbell, Car, Sparkles, Flower2, Wine, Theater, Eye, Zap,
+  CloudRain, Sun, Gamepad2, BriefcaseBusiness, Fence, Baby,
+  type LucideIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { projects } from "@/data/projects";
 import SEO from "@/components/SEO";
 import EnquirySection from "@/components/EnquirySection";
+
+/* Map amenity keywords → icons for visual richness */
+const amenityIconMap: Record<string, LucideIcon> = {
+  "gated community": Fence,
+  "24/7 security": ShieldCheck,
+  "landscaped gardens": Flower2,
+  "club house": Home,
+  "swimming pool": Waves,
+  "jogging track": Dumbbell,
+  "children's play area": Baby,
+  "underground electrification": Zap,
+  "private garden": Flower2,
+  "organic farm": Trees,
+  "horse riding": Sparkles,
+  "spa & wellness": Sparkles,
+  "helipad access": Sun,
+  "concierge service": BriefcaseBusiness,
+  "concierge": BriefcaseBusiness,
+  "wine cellar": Wine,
+  "private elevator": Home,
+  "infinity pool": Waves,
+  "sky lounge": Eye,
+  "smart home": Zap,
+  "valet parking": Car,
+  "private theater": Theater,
+  "home theater": Theater,
+  "rooftop observatory": Eye,
+  "rooftop garden": Flower2,
+  "business center": BriefcaseBusiness,
+  "indoor games": Gamepad2,
+  "gymnasium": Dumbbell,
+  "meditation zone": Sparkles,
+  "ev charging": Zap,
+  "solar powered": Sun,
+  "rainwater harvesting": CloudRain,
+  "private golf course": Trees,
+  "equestrian club": Sparkles,
+  "italian marble": Sparkles,
+  "private courtyard": Flower2,
+  "guest house": Home,
+  "staff quarters": Home,
+};
+
+const getAmenityIcon = (amenity: string): LucideIcon => {
+  return amenityIconMap[amenity.toLowerCase()] || Sparkles;
+};
 
 const ProjectDetail = () => {
   const { slug } = useParams();
@@ -64,15 +115,28 @@ const ProjectDetail = () => {
               <p className="text-muted-foreground font-sans leading-relaxed">{project.description}</p>
             </div>
 
-            {/* Amenities */}
+            {/* Amenities — Premium Cards */}
             <div>
-              <h2 className="text-2xl font-serif font-bold mb-4">Amenities & <span className="gold-gradient-text">Features</span></h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {project.amenities.map((amenity) => (
-                  <div key={amenity} className="bg-card border border-border rounded-lg p-3 text-center text-sm font-sans text-foreground">
-                    {amenity}
-                  </div>
-                ))}
+              <h2 className="text-2xl font-serif font-bold mb-6">Amenities & <span className="gold-gradient-text">Features</span></h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {project.amenities.map((amenity) => {
+                  const Icon = getAmenityIcon(amenity);
+                  return (
+                    <div
+                      key={amenity}
+                      className="group relative bg-card border border-border rounded-lg p-5 flex flex-col items-center text-center gap-3 transition-all duration-300 hover:border-primary/40 hover:gold-glow"
+                    >
+                      {/* Subtle gold accent line at top */}
+                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[2px] gold-gradient rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="w-10 h-10 rounded-full border border-border flex items-center justify-center transition-colors duration-300 group-hover:border-primary/50 group-hover:bg-primary/5">
+                        <Icon className="w-4.5 h-4.5 text-muted-foreground transition-colors duration-300 group-hover:text-primary" strokeWidth={1.5} />
+                      </div>
+                      <span className="text-xs font-sans font-medium text-foreground/80 leading-tight tracking-wide">
+                        {amenity}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
