@@ -3,45 +3,89 @@ import { ArrowRight } from "lucide-react";
 import { blogPosts } from "@/data/blogs";
 
 const BlogPreview = () => {
+  const featured = blogPosts[0];
+  const rest = blogPosts.slice(1);
+
   return (
-    <section className="section-padding bg-card/50">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <p className="text-primary text-sm tracking-[0.3em] uppercase mb-4 font-sans">Insights</p>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold mb-6">
-            Latest from Our <span className="gold-gradient-text">Blog</span>
-          </h2>
+    <section className="section-padding">
+      <div className="max-w-[1440px] mx-auto">
+        {/* Editorial header */}
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-16">
+          <div>
+            <div className="flex items-center gap-4 mb-6">
+              <div className="editorial-divider" />
+              <p className="editorial-label">Insights</p>
+            </div>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold leading-[1.05]">
+              Latest from Our{" "}
+              <em className="font-editorial font-light italic gold-gradient-text not-italic">Blog</em>
+            </h2>
+          </div>
+          <Link
+            to="/blog"
+            className="group inline-flex items-center gap-2 text-sm font-sans text-primary font-medium tracking-wide hover:gap-3 transition-all"
+          >
+            All Articles
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {blogPosts.map((post) => (
-            <Link
-              key={post.id}
-              to={`/blog/${post.slug}`}
-              className="group bg-card border border-border rounded-lg overflow-hidden transition-all duration-500 hover:border-primary/50 hover:gold-glow"
-            >
-              <div className="aspect-[16/10] overflow-hidden">
-                <img
-                  src={post.image}
-                  alt={post.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  loading="lazy"
-                />
-              </div>
-              <div className="p-5 space-y-3">
-                <p className="text-xs text-primary font-sans uppercase tracking-wider">{post.category}</p>
-                <h3 className="font-serif font-bold text-foreground group-hover:text-primary transition-colors text-sm leading-snug">
-                  {post.title}
-                </h3>
-                <p className="text-xs text-muted-foreground leading-relaxed font-sans line-clamp-2">
-                  {post.excerpt}
-                </p>
-                <div className="flex items-center gap-1 text-primary text-xs font-semibold font-sans pt-1">
-                  Read More <ArrowRight className="w-3 h-3" />
+        {/* Editorial asymmetric: large featured + stacked list */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Featured article */}
+          <Link
+            to={`/blog/${featured.slug}`}
+            className="lg:col-span-7 group block"
+          >
+            <div className="relative aspect-[16/10] overflow-hidden mb-6">
+              <img
+                src={featured.image}
+                alt={featured.title}
+                className="w-full h-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105"
+                loading="lazy"
+              />
+            </div>
+            <p className="text-[10px] tracking-[0.25em] uppercase font-sans text-primary/60 mb-3">
+              {featured.category}
+            </p>
+            <h3 className="text-xl md:text-2xl font-serif font-bold text-foreground group-hover:text-primary transition-colors mb-3 leading-tight">
+              {featured.title}
+            </h3>
+            <p className="text-sm text-muted-foreground font-sans leading-relaxed max-w-lg line-clamp-2">
+              {featured.excerpt}
+            </p>
+          </Link>
+
+          {/* Other articles — stacked list */}
+          <div className="lg:col-span-5 flex flex-col divide-y divide-border">
+            {rest.map((post) => (
+              <Link
+                key={post.id}
+                to={`/blog/${post.slug}`}
+                className="group flex gap-5 py-6 first:pt-0 last:pb-0"
+              >
+                <div className="relative overflow-hidden w-24 h-24 flex-shrink-0">
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    loading="lazy"
+                  />
                 </div>
-              </div>
-            </Link>
-          ))}
+                <div className="flex-1">
+                  <p className="text-[10px] tracking-[0.25em] uppercase font-sans text-primary/60 mb-2">
+                    {post.category}
+                  </p>
+                  <h3 className="text-sm font-serif font-bold text-foreground group-hover:text-primary transition-colors leading-snug mb-1">
+                    {post.title}
+                  </h3>
+                  <p className="text-xs text-muted-foreground font-sans line-clamp-2">
+                    {post.excerpt}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </section>
