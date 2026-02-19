@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Phone } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Menu, X, ArrowUpRight } from "lucide-react";
 import logo from "@/assets/logo.jpeg";
 
 const navLinks = [
@@ -17,37 +16,43 @@ const Navbar = () => {
   const location = useLocation();
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-md border-b border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          <Link to="/" className="flex items-center gap-2">
-            <img src={logo} alt="CHASE2SUCCESS Logo" className="h-12 w-auto" />
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl">
+      <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16">
+        <div className="flex items-center justify-between h-20 lg:h-24">
+          <Link to="/" className="flex items-center gap-3">
+            <img src={logo} alt="CHASE2SUCCESS Logo" className="h-10 lg:h-12 w-auto" />
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-10">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 to={link.href}
-                className={`text-sm font-medium tracking-wide uppercase transition-colors duration-300 hover:text-primary ${
-                  location.pathname === link.href ? "text-primary" : "text-foreground"
+                className={`font-editorial text-[15px] tracking-wide transition-colors duration-300 hover:text-primary ${
+                  location.pathname === link.href
+                    ? "text-primary"
+                    : "text-foreground/70"
                 }`}
               >
                 {link.label}
               </Link>
             ))}
-            <a href="tel:+919999999999">
-              <Button className="gold-gradient text-primary-foreground font-semibold hover:opacity-90 transition-opacity">
-                <Phone className="w-4 h-4 mr-1" />
-                Call Now
-              </Button>
+          </div>
+
+          <div className="hidden lg:flex items-center">
+            <a
+              href="tel:+919999999999"
+              className="group flex items-center gap-2 text-sm font-sans font-medium text-primary border border-primary/30 px-6 py-2.5 hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+            >
+              Get in Touch
+              <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
           </div>
 
           {/* Mobile toggle */}
           <button
-            className="md:hidden text-foreground"
+            className="lg:hidden text-foreground"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"
           >
@@ -58,26 +63,31 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden bg-background border-t border-border animate-fade-up">
-          <div className="px-4 py-6 space-y-4">
+        <div className="lg:hidden bg-background border-t border-border">
+          <div className="px-6 py-8 space-y-1">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 to={link.href}
                 onClick={() => setIsOpen(false)}
-                className={`block text-sm font-medium tracking-wide uppercase py-2 transition-colors hover:text-primary ${
-                  location.pathname === link.href ? "text-primary" : "text-foreground"
+                className={`block font-editorial text-2xl py-3 transition-colors hover:text-primary ${
+                  location.pathname === link.href
+                    ? "text-primary"
+                    : "text-foreground/70"
                 }`}
               >
                 {link.label}
               </Link>
             ))}
-            <a href="tel:+919999999999" className="block">
-              <Button className="w-full gold-gradient text-primary-foreground font-semibold">
-                <Phone className="w-4 h-4 mr-1" />
-                Call Now
-              </Button>
-            </a>
+            <div className="pt-6">
+              <a
+                href="tel:+919999999999"
+                className="inline-flex items-center gap-2 text-sm font-sans font-medium text-primary border border-primary/30 px-6 py-3 hover:bg-primary hover:text-primary-foreground transition-all"
+              >
+                Get in Touch
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
           </div>
         </div>
       )}

@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 import heroBg from "@/assets/hero-bg.jpg";
 
 const HeroSection = () => {
   return (
-    <section className="relative h-screen flex flex-col overflow-hidden">
+    <section className="relative min-h-screen flex items-end overflow-hidden">
       {/* Full-bleed hero image */}
       <div className="absolute inset-0">
         <img
@@ -13,29 +13,49 @@ const HeroSection = () => {
           className="w-full h-full object-cover"
           loading="eager"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-transparent" />
       </div>
 
-      {/* Content — pinned to bottom with generous whitespace */}
-      <div className="relative z-10 mt-auto pb-20 md:pb-28 lg:pb-32 px-6 sm:px-10 lg:px-16 max-w-6xl">
-        <p className="text-primary/80 font-sans text-[11px] md:text-xs tracking-[0.4em] uppercase mb-5 animate-fade-up">
-          Real Estate Advisory
-        </p>
-        <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-serif font-bold leading-[0.95] tracking-tight mb-8 animate-fade-up-delay-1">
-          Where Luxury<br />
-          Meets <span className="gold-gradient-text">Investment</span>
-        </h1>
-        <div className="flex items-center gap-5 animate-fade-up-delay-2">
-          <Link to="/projects">
-            <Button size="lg" className="gold-gradient text-primary-foreground font-semibold px-10 py-6 text-sm tracking-wide hover:opacity-90 transition-opacity">
-              View Projects
-            </Button>
-          </Link>
-          <a href="#enquiry">
-            <Button size="lg" variant="outline" className="border-foreground/20 text-foreground px-10 py-6 text-sm tracking-wide hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all">
-              Enquire Now
-            </Button>
-          </a>
+      {/* Editorial content — asymmetric, bottom-left */}
+      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 pb-20 md:pb-28 lg:pb-36 pt-32">
+        <div className="max-w-3xl">
+          <div className="flex items-center gap-4 mb-8 animate-fade-up">
+            <div className="editorial-divider" />
+            <p className="editorial-label">
+              Real Estate Advisory
+            </p>
+          </div>
+
+          <h1 className="text-[clamp(2.5rem,7vw,7rem)] font-serif font-bold leading-[0.9] tracking-tight mb-8 animate-fade-up-delay-1">
+            Where Luxury
+            <br />
+            Meets{" "}
+            <em className="font-editorial font-light italic text-primary not-italic gold-gradient-text">
+              Investment
+            </em>
+          </h1>
+
+          <p className="font-editorial text-lg md:text-xl text-foreground/60 max-w-md leading-relaxed mb-10 animate-fade-up-delay-1">
+            Premium plots, farmhouses & luxury residences — curated for the discerning investor.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-start gap-4 animate-fade-up-delay-2">
+            <Link
+              to="/projects"
+              className="group inline-flex items-center gap-3 gold-gradient text-primary-foreground font-sans text-sm font-semibold tracking-wide px-8 py-4 hover:opacity-90 transition-opacity"
+            >
+              Explore Projects
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+            <a
+              href="#enquiry"
+              className="group inline-flex items-center gap-3 border border-foreground/20 text-foreground font-sans text-sm font-medium tracking-wide px-8 py-4 hover:border-primary hover:text-primary transition-all"
+            >
+              Make an Enquiry
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </a>
+          </div>
         </div>
       </div>
     </section>
