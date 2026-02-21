@@ -13,7 +13,7 @@ type Project = Tables<"projects">;
 
 const emptyProject = {
   name: "", slug: "", location: "", price: "", description: "", short_description: "",
-  image_url: "", type: "", status: "draft", area: "", amenities: [] as string[], gallery: [] as string[],
+  image_url: "", type: "", status: "draft", area: "", rera_number: "", amenities: [] as string[], gallery: [] as string[],
 };
 
 const AdminProjects = () => {
@@ -35,7 +35,7 @@ const AdminProjects = () => {
   const openNew = () => { setEditing(null); setForm(emptyProject); setAmenitiesStr(""); setOpen(true); };
   const openEdit = (p: Project) => {
     setEditing(p);
-    setForm({ name: p.name, slug: p.slug, location: p.location, price: p.price, description: p.description, short_description: p.short_description, image_url: p.image_url, type: p.type, status: p.status, area: p.area, amenities: p.amenities ?? [], gallery: p.gallery ?? [] });
+    setForm({ name: p.name, slug: p.slug, location: p.location, price: p.price, description: p.description, short_description: p.short_description, image_url: p.image_url, type: p.type, status: p.status, area: p.area, rera_number: p.rera_number, amenities: p.amenities ?? [], gallery: p.gallery ?? [] });
     setAmenitiesStr((p.amenities ?? []).join(", "));
     setOpen(true);
   };
@@ -130,6 +130,7 @@ const AdminProjects = () => {
                   </select>
                 </div>
               </div>
+              <div className="space-y-2"><Label>RERA Number</Label><Input value={form.rera_number} onChange={e => setForm(f => ({...f, rera_number: e.target.value}))} placeholder="e.g. RAJ/P/2019/942" /></div>
 
               {/* Main Image Upload */}
               <div className="space-y-2">
