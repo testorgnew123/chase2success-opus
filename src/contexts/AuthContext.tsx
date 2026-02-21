@@ -52,21 +52,42 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // INITIAL load — controls loading state
     const initializeAuth = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const { data: { session }, error } = await supabase.auth.getSession();
         if (!isMounted) return;
+        if (error) {
+          console.error("Auth init error:", error);
+          setSession(null);
+          setIsAdmin(false);
+          return;
+        }
         setSession(session);
         if (session) {
           await checkAdminRole();
+        }
+      } catch (err) {
+        console.error("Auth init exception:", err);
+        if (isMounted) {
+          setSession(null);
+          setIsAdmin(false);
         }
       } finally {
         if (isMounted) setLoading(false);
       }
     };
 
+    // Safety timeout — never stay loading forever
+    const timeout = setTimeout(() => {
+      if (isMounted && loading) {
+        console.warn("Auth loading timeout — forcing load complete");
+        setLoading(false);
+      }
+    }, 5000);
+
     initializeAuth();
 
     return () => {
       isMounted = false;
+      clearTimeout(timeout);
       subscription.unsubscribe();
     };
   }, []);
