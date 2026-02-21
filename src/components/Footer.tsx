@@ -80,7 +80,10 @@ const Footer = () => {
 
       <div className="border-t border-border">
         <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex gap-6">
+          <p className="text-xs text-muted-foreground font-sans max-w-2xl">
+            <span className="font-semibold">RERA Disclaimer:</span> All projects are RERA registered. Buyers are advised to verify all details independently before making any purchase decision.
+          </p>
+          <div className="flex gap-6 shrink-0">
             <Link to="/privacy" className="text-xs text-muted-foreground hover:text-primary transition-colors font-sans">Privacy Policy</Link>
             <Link to="/terms" className="text-xs text-muted-foreground hover:text-primary transition-colors font-sans">Terms & Conditions</Link>
           </div>
