@@ -9,7 +9,7 @@ const features = [
   {
     icon: Scale,
     title: "Legal Transparency",
-    description: "Complete documentation support with clear titles and RERA compliance.",
+    description: "Complete documentation support with clear titles and RERA compliance. RERA Reg. No: RAJ/P/2019/942.",
   },
   {
     icon: TrendingUp,
