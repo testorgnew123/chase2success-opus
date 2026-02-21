@@ -18,6 +18,7 @@ export interface Project {
   type: string;
   status: string;
   area: string;
+  rera_number?: string;
 }
 
 export const projects: Project[] = [
