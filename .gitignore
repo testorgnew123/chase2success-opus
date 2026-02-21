@@ -12,6 +12,19 @@ dist
 dist-ssr
 *.local
 
+# Environment variables
+.env
+.env.*
+
+# Database dumps (may contain seed data with old URLs / sensitive info)
+database/
+
+# Claude Code local settings
+.claude/
+
+# Lockfiles from other package managers
+bun.lockb
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

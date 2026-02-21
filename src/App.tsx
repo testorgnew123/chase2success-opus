@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { useEffect } from "react";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
+import { neon } from "@/lib/neon";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import WhatsAppFloat from "./components/WhatsAppFloat";
@@ -34,7 +34,7 @@ const PageTracker = () => {
   const location = useLocation();
   useEffect(() => {
     if (location.pathname.startsWith("/admin")) return;
-    supabase.from("page_visits").insert({
+    neon.from("page_visits").insert({
       path: location.pathname,
       referrer: document.referrer || null,
       user_agent: navigator.userAgent || null,
@@ -76,7 +76,7 @@ const App = () => (
             <PageTracker />
             <Routes>
               <Route path="/admin/login" element={<AdminLogin />} />
-              
+
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<AdminDashboard />} />
                 <Route path="analytics" element={<AdminAnalytics />} />

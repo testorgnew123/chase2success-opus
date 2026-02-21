@@ -3,7 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 
 const AdminLayout = () => {
-  const { session, isAdmin, loading } = useAuth();
+  const { user, isAdmin, loading } = useAuth();
 
   if (loading) {
     return (
@@ -13,7 +13,7 @@ const AdminLayout = () => {
     );
   }
 
-  if (!session) return <Navigate to="/admin/login" replace />;
+  if (!user) return <Navigate to="/admin/login" replace />;
   if (!isAdmin) return <Navigate to="/" replace />;
 
   return (

@@ -3,7 +3,7 @@ import { ArrowRight, MessageCircle, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { supabase } from "@/integrations/supabase/client";
+import { neon } from "@/lib/neon";
 import { useProjects } from "@/hooks/useProjects";
 import { toast } from "@/hooks/use-toast";
 
@@ -20,7 +20,7 @@ const EnquirySection = () => {
     }
     setSubmitting(true);
     try {
-      const { error } = await supabase.from("enquiries").insert({
+      const { error } = await neon.from("enquiries").insert({
         name: formData.name,
         email: formData.email,
         phone: formData.mobile,
@@ -28,17 +28,6 @@ const EnquirySection = () => {
         message: formData.message || `Interested in ${formData.project || "your projects"}`,
       });
       if (error) throw error;
-
-      // Send email notification
-      await supabase.functions.invoke("send-enquiry-email", {
-        body: {
-          name: formData.name,
-          email: formData.email,
-          phone: formData.mobile,
-          project: formData.project,
-          message: formData.message,
-        },
-      });
 
       toast({ title: "Enquiry submitted!", description: "We'll get back to you within 24 hours." });
       setFormData({ name: "", email: "", mobile: "", project: "", message: "" });

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { neon } from "@/lib/neon";
 import { BarChart3, Eye, FolderOpen, FileText, TrendingUp, Calendar } from "lucide-react";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -37,11 +37,11 @@ const AdminAnalytics = () => {
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
     Promise.all([
-      supabase.from("page_visits").select("id", { count: "exact", head: true }),
-      supabase.from("page_visits").select("id", { count: "exact", head: true }).gte("visited_at", today),
+      neon.from("page_visits").select("id"),
+      neon.from("page_visits").select("id").gte("visited_at", today),
     ]).then(([all, todayR]) => {
-      setTotalVisits(all.count ?? 0);
-      setTodayVisits(todayR.count ?? 0);
+      setTotalVisits(all.data?.length ?? 0);
+      setTodayVisits(todayR.data?.length ?? 0);
     });
   }, []);
 
@@ -74,7 +74,7 @@ const AdminAnalytics = () => {
           break;
       }
 
-      const { data: visits } = await supabase
+      const { data: visits } = await neon
         .from("page_visits")
         .select("visited_at, path")
         .gte("visited_at", startDate.toISOString())

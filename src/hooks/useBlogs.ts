@@ -1,14 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import type { Tables } from "@/integrations/supabase/types";
+import { neon } from "@/lib/neon";
+import type { BlogPost } from "@/lib/db-types";
 
-export type DbBlog = Tables<"blog_posts">;
+export type DbBlog = BlogPost;
 
 export const useBlogs = () => {
   return useQuery({
     queryKey: ["blogs"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await neon
         .from("blog_posts")
         .select("*")
         .eq("status", "published")
@@ -24,7 +24,7 @@ export const useBlog = (slug: string | undefined) => {
     queryKey: ["blog", slug],
     queryFn: async () => {
       if (!slug) throw new Error("No slug");
-      const { data, error } = await supabase
+      const { data, error } = await neon
         .from("blog_posts")
         .select("*")
         .eq("slug", slug)

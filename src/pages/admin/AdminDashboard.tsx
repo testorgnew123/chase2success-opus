@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { neon } from "@/lib/neon";
 import { FolderOpen, FileText, MessageSquare, Star, Eye, TrendingUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -21,19 +21,19 @@ const AdminDashboard = () => {
     const fetchStats = async () => {
       const today = new Date().toISOString().split("T")[0];
       const [projects, blogs, enquiries, unread, testimonials, visits, todayV] = await Promise.all([
-        supabase.from("projects").select("id", { count: "exact", head: true }),
-        supabase.from("blog_posts").select("id", { count: "exact", head: true }),
-        supabase.from("enquiries").select("id", { count: "exact", head: true }),
-        supabase.from("enquiries").select("id", { count: "exact", head: true }).eq("is_read", false),
-        supabase.from("testimonials").select("id", { count: "exact", head: true }),
-        supabase.from("page_visits").select("id", { count: "exact", head: true }),
-        supabase.from("page_visits").select("id", { count: "exact", head: true }).gte("visited_at", today),
+        neon.from("projects").select("id"),
+        neon.from("blog_posts").select("id"),
+        neon.from("enquiries").select("id"),
+        neon.from("enquiries").select("id").eq("is_read", false),
+        neon.from("testimonials").select("id"),
+        neon.from("page_visits").select("id"),
+        neon.from("page_visits").select("id").gte("visited_at", today),
       ]);
       setStats({
-        projects: projects.count ?? 0, blogs: blogs.count ?? 0,
-        enquiries: enquiries.count ?? 0, unreadEnquiries: unread.count ?? 0,
-        testimonials: testimonials.count ?? 0, totalVisits: visits.count ?? 0,
-        todayVisits: todayV.count ?? 0,
+        projects: projects.data?.length ?? 0, blogs: blogs.data?.length ?? 0,
+        enquiries: enquiries.data?.length ?? 0, unreadEnquiries: unread.data?.length ?? 0,
+        testimonials: testimonials.data?.length ?? 0, totalVisits: visits.data?.length ?? 0,
+        todayVisits: todayV.data?.length ?? 0,
       });
     };
     fetchStats();

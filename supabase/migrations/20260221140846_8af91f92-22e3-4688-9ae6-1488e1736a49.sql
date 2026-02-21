@@ -1,1 +1,0 @@
-ALTER TABLE public.projects ADD COLUMN rera_number text DEFAULT '' NOT NULL;

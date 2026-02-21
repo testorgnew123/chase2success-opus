@@ -1,14 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import type { Tables } from "@/integrations/supabase/types";
+import { neon } from "@/lib/neon";
+import type { Project } from "@/lib/db-types";
 
-export type DbProject = Tables<"projects">;
+export type DbProject = Project;
 
 export const useProjects = () => {
   return useQuery({
     queryKey: ["projects"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await neon
         .from("projects")
         .select("*")
         .eq("status", "published")
@@ -24,7 +24,7 @@ export const useProject = (slug: string | undefined) => {
     queryKey: ["project", slug],
     queryFn: async () => {
       if (!slug) throw new Error("No slug");
-      const { data, error } = await supabase
+      const { data, error } = await neon
         .from("projects")
         .select("*")
         .eq("slug", slug)

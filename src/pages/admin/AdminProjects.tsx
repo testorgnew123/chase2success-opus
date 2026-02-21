@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { neon } from "@/lib/neon";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,10 +8,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 import { Plus, Pencil, Trash2, Upload, X } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import type { Tables } from "@/integrations/supabase/types";
+import type { Project } from "@/lib/db-types";
 import { AMENITY_NAMES, getAmenityIcon } from "@/data/amenities";
-
-type Project = Tables<"projects">;
 
 const emptyProject = {
   name: "", slug: "", location: "", price: "", description: "", short_description: "",
@@ -30,7 +29,7 @@ const AdminProjects = () => {
   const [uploadingGallery, setUploadingGallery] = useState(false);
 
   const fetchProjects = async () => {
-    const { data } = await supabase.from("projects").select("*").order("created_at", { ascending: false });
+    const { data } = await neon.from("projects").select("*").order("created_at", { ascending: false });
     setProjects(data ?? []);
   };
 
@@ -45,15 +44,11 @@ const AdminProjects = () => {
   };
 
   const uploadImage = async (file: File): Promise<string | null> => {
-    const ext = file.name.split('.').pop();
-    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${ext}`;
-    const { error } = await supabase.storage.from("project-images").upload(fileName, file);
-    if (error) {
-      toast({ title: "Upload failed", description: error.message, variant: "destructive" });
-      return null;
+    const url = await uploadToCloudinary(file, "project-images");
+    if (!url) {
+      toast({ title: "Upload failed", description: "Could not upload image", variant: "destructive" });
     }
-    const { data: urlData } = supabase.storage.from("project-images").getPublicUrl(fileName);
-    return urlData.publicUrl;
+    return url;
   };
 
   const validateImageDimensions = (file: File, minWidth = 1200, minRatio = 1.2): Promise<boolean> => {
@@ -108,11 +103,11 @@ const AdminProjects = () => {
   const handleSave = async () => {
     const payload = { ...form, amenities: amenitiesStr.split(",").map(s => s.trim()).filter(Boolean), slug: form.slug || form.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "") };
     if (editing) {
-      const { error } = await supabase.from("projects").update(payload).eq("id", editing.id);
+      const { error } = await neon.from("projects").update(payload).eq("id", editing.id);
       if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
       toast({ title: "Project updated" });
     } else {
-      const { error } = await supabase.from("projects").insert(payload);
+      const { error } = await neon.from("projects").insert(payload);
       if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
       toast({ title: "Project created" });
     }
@@ -122,7 +117,7 @@ const AdminProjects = () => {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this project?")) return;
-    await supabase.from("projects").delete().eq("id", id);
+    await neon.from("projects").delete().eq("id", id);
     toast({ title: "Project deleted" });
     fetchProjects();
   };

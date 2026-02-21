@@ -1,24 +1,22 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { neon } from "@/lib/neon";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { Mail, Check } from "lucide-react";
-import type { Tables } from "@/integrations/supabase/types";
-
-type Enquiry = Tables<"enquiries">;
+import type { Enquiry } from "@/lib/db-types";
 
 const AdminEnquiries = () => {
   const [enquiries, setEnquiries] = useState<Enquiry[]>([]);
 
-  const fetch = async () => {
-    const { data } = await supabase.from("enquiries").select("*").order("created_at", { ascending: false });
+  const fetchData = async () => {
+    const { data } = await neon.from("enquiries").select("*").order("created_at", { ascending: false });
     setEnquiries(data ?? []);
   };
-  useEffect(() => { fetch(); }, []);
+  useEffect(() => { fetchData(); }, []);
 
   const markRead = async (id: string) => {
-    await supabase.from("enquiries").update({ is_read: true }).eq("id", id);
-    toast({ title: "Marked as read" }); fetch();
+    await neon.from("enquiries").update({ is_read: true }).eq("id", id);
+    toast({ title: "Marked as read" }); fetchData();
   };
 
   return (

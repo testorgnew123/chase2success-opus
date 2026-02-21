@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { neon } from "@/lib/neon";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,9 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import type { Tables } from "@/integrations/supabase/types";
-
-type Testimonial = Tables<"testimonials">;
+import type { Testimonial } from "@/lib/db-types";
 
 const emptyTestimonial = { name: "", role: "", content: "", rating: 5, image_url: "", status: "draft" };
 
@@ -19,32 +17,32 @@ const AdminTestimonials = () => {
   const [editing, setEditing] = useState<Testimonial | null>(null);
   const [form, setForm] = useState(emptyTestimonial);
 
-  const fetch = async () => {
-    const { data } = await supabase.from("testimonials").select("*").order("created_at", { ascending: false });
+  const fetchData = async () => {
+    const { data } = await neon.from("testimonials").select("*").order("created_at", { ascending: false });
     setItems(data ?? []);
   };
-  useEffect(() => { fetch(); }, []);
+  useEffect(() => { fetchData(); }, []);
 
   const openNew = () => { setEditing(null); setForm(emptyTestimonial); setOpen(true); };
   const openEdit = (t: Testimonial) => { setEditing(t); setForm({ name: t.name, role: t.role, content: t.content, rating: t.rating, image_url: t.image_url ?? "", status: t.status }); setOpen(true); };
 
   const handleSave = async () => {
     if (editing) {
-      const { error } = await supabase.from("testimonials").update(form).eq("id", editing.id);
+      const { error } = await neon.from("testimonials").update(form).eq("id", editing.id);
       if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
       toast({ title: "Testimonial updated" });
     } else {
-      const { error } = await supabase.from("testimonials").insert(form);
+      const { error } = await neon.from("testimonials").insert(form);
       if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
       toast({ title: "Testimonial created" });
     }
-    setOpen(false); fetch();
+    setOpen(false); fetchData();
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this testimonial?")) return;
-    await supabase.from("testimonials").delete().eq("id", id);
-    toast({ title: "Testimonial deleted" }); fetch();
+    await neon.from("testimonials").delete().eq("id", id);
+    toast({ title: "Testimonial deleted" }); fetchData();
   };
 
   return (

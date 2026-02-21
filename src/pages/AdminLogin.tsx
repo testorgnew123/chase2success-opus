@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 
 const AdminLogin = () => {
-  const { session, isAdmin, loading, signIn } = useAuth();
+  const { user, isAdmin, loading, signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -20,7 +20,7 @@ const AdminLogin = () => {
     );
   }
 
-  if (session && isAdmin) return <Navigate to="/admin" replace />;
+  if (user && isAdmin) return <Navigate to="/admin" replace />;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

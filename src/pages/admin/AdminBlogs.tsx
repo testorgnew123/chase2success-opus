@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { neon } from "@/lib/neon";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,12 +8,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 import { Plus, Pencil, Trash2, Upload, Eye, Code, FileText, Image, Copy } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { Tables } from "@/integrations/supabase/types";
+import type { BlogPost } from "@/lib/db-types";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 
-type Blog = Tables<"blog_posts">;
+type Blog = BlogPost;
 
 const emptyBlog = { title: "", slug: "", excerpt: "", content: "", image_url: "", category: "", author: "Admin", status: "draft" };
 
@@ -27,7 +27,7 @@ const AdminBlogs = () => {
   const [generatedUrl, setGeneratedUrl] = useState("");
 
   const fetchBlogs = async () => {
-    const { data } = await supabase.from("blog_posts").select("*").order("created_at", { ascending: false });
+    const { data } = await neon.from("blog_posts").select("*").order("created_at", { ascending: false });
     setBlogs(data ?? []);
   };
   useEffect(() => { fetchBlogs(); }, []);
@@ -35,23 +35,19 @@ const AdminBlogs = () => {
   const openNew = () => { setEditing(null); setForm(emptyBlog); setContentMode("write"); setGeneratedUrl(""); setOpen(true); };
   const openEdit = (b: Blog) => { setEditing(b); setForm({ title: b.title, slug: b.slug, excerpt: b.excerpt, content: b.content, image_url: b.image_url, category: b.category, author: b.author, status: b.status }); setContentMode("write"); setGeneratedUrl(""); setOpen(true); };
 
-  const uploadImage = async (file: File, bucket: string): Promise<string | null> => {
-    const ext = file.name.split('.').pop();
-    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${ext}`;
-    const { error } = await supabase.storage.from(bucket).upload(fileName, file);
-    if (error) {
-      toast({ title: "Upload failed", description: error.message, variant: "destructive" });
-      return null;
+  const uploadImage = async (file: File): Promise<string | null> => {
+    const url = await uploadToCloudinary(file, "blog-images");
+    if (!url) {
+      toast({ title: "Upload failed", description: "Could not upload image", variant: "destructive" });
     }
-    const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(fileName);
-    return urlData.publicUrl;
+    return url;
   };
 
   const handleMainImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
-    const url = await uploadImage(file, "blog-images");
+    const url = await uploadImage(file);
     if (url) setForm(f => ({ ...f, image_url: url }));
     setUploading(false);
   };
@@ -60,7 +56,7 @@ const AdminBlogs = () => {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploadingInline(true);
-    const url = await uploadImage(file, "blog-images");
+    const url = await uploadImage(file);
     if (url) setGeneratedUrl(url);
     setUploadingInline(false);
   };
@@ -85,11 +81,11 @@ const AdminBlogs = () => {
   const handleSave = async () => {
     const payload = { ...form, slug: form.slug || form.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, ""), published_at: form.status === "published" ? new Date().toISOString() : null };
     if (editing) {
-      const { error } = await supabase.from("blog_posts").update(payload).eq("id", editing.id);
+      const { error } = await neon.from("blog_posts").update(payload).eq("id", editing.id);
       if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
       toast({ title: "Blog post updated" });
     } else {
-      const { error } = await supabase.from("blog_posts").insert(payload);
+      const { error } = await neon.from("blog_posts").insert(payload);
       if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
       toast({ title: "Blog post created" });
     }
@@ -98,7 +94,7 @@ const AdminBlogs = () => {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this blog post?")) return;
-    await supabase.from("blog_posts").delete().eq("id", id);
+    await neon.from("blog_posts").delete().eq("id", id);
     toast({ title: "Blog post deleted" }); fetchBlogs();
   };
 
