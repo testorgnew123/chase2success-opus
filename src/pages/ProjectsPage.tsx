@@ -124,6 +124,9 @@ const ProjectCardLarge = ({ project }: { project: DbProject }) => (
           <MapPin className="w-3.5 h-3.5 text-primary" />
           <span>{project.location}</span>
         </div>
+        {project.rera_number && (
+          <p className="text-[10px] tracking-wide font-sans text-muted-foreground/60 mt-1">RERA: {project.rera_number}</p>
+        )}
       </div>
     </div>
   </Link>
@@ -153,6 +156,9 @@ const ProjectCardCompact = ({ project }: { project: DbProject }) => (
           <MapPin className="w-3 h-3 text-primary" />
           <span>{project.location}</span>
         </div>
+        {project.rera_number && (
+          <p className="text-[10px] tracking-wide font-sans text-muted-foreground/60">RERA: {project.rera_number}</p>
+        )}
         <div className="flex items-center justify-between pt-1">
           <p className="text-primary font-serif text-lg font-bold">{project.price}</p>
           <span className="text-muted-foreground text-xs tracking-wide uppercase group-hover:text-primary transition-colors flex items-center gap-1">
