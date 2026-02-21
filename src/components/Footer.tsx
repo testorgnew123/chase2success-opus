@@ -73,6 +73,7 @@ const Footer = () => {
               <p>Gurugram, Haryana 122002</p>
               <a href="tel:+919999999999" className="hover:text-primary transition-colors block">+91 99999 99999</a>
               <a href="mailto:info@chase2success.com" className="hover:text-primary transition-colors block">info@chase2success.com</a>
+              <p className="text-xs text-primary/70 pt-1">RERA Reg. No: RAJ/P/2019/942</p>
             </div>
           </div>
         </div>
