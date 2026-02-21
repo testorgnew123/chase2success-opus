@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,7 @@ import { toast } from "@/hooks/use-toast";
 import { Plus, Pencil, Trash2, Upload, X } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import type { Tables } from "@/integrations/supabase/types";
+import { AMENITY_NAMES, getAmenityIcon } from "@/data/amenities";
 
 type Project = Tables<"projects">;
 
@@ -22,6 +23,9 @@ const AdminProjects = () => {
   const [editing, setEditing] = useState<Project | null>(null);
   const [form, setForm] = useState(emptyProject);
   const [amenitiesStr, setAmenitiesStr] = useState("");
+  const [amenityInput, setAmenityInput] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const amenityInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadingGallery, setUploadingGallery] = useState(false);
 
@@ -174,7 +178,92 @@ const AdminProjects = () => {
 
               <div className="space-y-2"><Label>Short Description <span className="text-muted-foreground text-xs">({form.short_description.length}/150)</span></Label><Textarea value={form.short_description} onChange={e => setForm(f => ({...f, short_description: e.target.value.slice(0, 150)}))} rows={2} maxLength={150} /></div>
               <div className="space-y-2"><Label>Full Description</Label><Textarea value={form.description} onChange={e => setForm(f => ({...f, description: e.target.value}))} rows={4} /></div>
-              <div className="space-y-2"><Label>Amenities (comma-separated)</Label><Input value={amenitiesStr} onChange={e => setAmenitiesStr(e.target.value)} /></div>
+              {/* Amenities with autocomplete */}
+              <div className="space-y-2">
+                <Label>Amenities</Label>
+                {/* Selected amenities as tags */}
+                <div className="flex flex-wrap gap-1.5 min-h-[32px]">
+                  {amenitiesStr.split(",").map(s => s.trim()).filter(Boolean).map((amenity, i) => {
+                    const Icon = getAmenityIcon(amenity);
+                    return (
+                      <span key={i} className="inline-flex items-center gap-1 bg-primary/10 text-primary text-xs px-2.5 py-1 rounded-full border border-primary/20">
+                        <Icon className="w-3 h-3" />
+                        {amenity}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const arr = amenitiesStr.split(",").map(s => s.trim()).filter(Boolean);
+                            arr.splice(i, 1);
+                            setAmenitiesStr(arr.join(", "));
+                          }}
+                          className="ml-0.5 hover:text-destructive"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </span>
+                    );
+                  })}
+                </div>
+                {/* Autocomplete input */}
+                <div className="relative">
+                  <Input
+                    ref={amenityInputRef}
+                    value={amenityInput}
+                    onChange={e => { setAmenityInput(e.target.value); setShowSuggestions(true); }}
+                    onFocus={() => setShowSuggestions(true)}
+                    onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                    onKeyDown={e => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        const val = amenityInput.trim();
+                        if (val) {
+                          const existing = amenitiesStr.split(",").map(s => s.trim()).filter(Boolean);
+                          if (!existing.some(a => a.toLowerCase() === val.toLowerCase())) {
+                            setAmenitiesStr([...existing, val].join(", "));
+                          }
+                          setAmenityInput("");
+                          setShowSuggestions(false);
+                        }
+                      }
+                    }}
+                    placeholder="Type to search amenities..."
+                  />
+                  {showSuggestions && amenityInput.length > 0 && (
+                    <div className="absolute z-50 top-full left-0 right-0 mt-1 max-h-48 overflow-y-auto bg-popover border border-border rounded-md shadow-lg">
+                      {AMENITY_NAMES
+                        .filter(name => {
+                          const existing = amenitiesStr.split(",").map(s => s.trim().toLowerCase()).filter(Boolean);
+                          return name.toLowerCase().includes(amenityInput.toLowerCase()) && !existing.includes(name.toLowerCase());
+                        })
+                        .slice(0, 12)
+                        .map(name => {
+                          const Icon = getAmenityIcon(name);
+                          return (
+                            <button
+                              key={name}
+                              type="button"
+                              className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-accent text-left transition-colors"
+                              onMouseDown={e => {
+                                e.preventDefault();
+                                const existing = amenitiesStr.split(",").map(s => s.trim()).filter(Boolean);
+                                setAmenitiesStr([...existing, name].join(", "));
+                                setAmenityInput("");
+                                setShowSuggestions(false);
+                                amenityInputRef.current?.focus();
+                              }}
+                            >
+                              <Icon className="w-4 h-4 text-primary" />
+                              {name}
+                            </button>
+                          );
+                        })}
+                      {AMENITY_NAMES.filter(name => name.toLowerCase().includes(amenityInput.toLowerCase())).length === 0 && (
+                        <p className="px-3 py-2 text-xs text-muted-foreground">No match — press Enter to add custom</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
 
               {/* Gallery Upload */}
               <div className="space-y-2">
