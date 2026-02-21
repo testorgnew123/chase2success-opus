@@ -151,7 +151,7 @@ const ProjectDetail = () => {
           </div>
 
           <div className="relative h-[45vh] lg:h-auto order-1 lg:order-2 overflow-hidden">
-            <img src={project.image_url} alt={`${project.name} in ${project.location}`} className="w-full h-full object-cover" loading="eager" />
+            <img src={project.image_url} alt={`${project.name} in ${project.location}`} className="w-full h-full object-cover object-center" loading="eager" />
             <div className="absolute inset-0 bg-gradient-to-l from-transparent to-background/20 hidden lg:block" />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent lg:hidden" />
             <div className="absolute bottom-6 right-6 lg:bottom-10 lg:right-10 bg-background/90 backdrop-blur-sm px-5 py-3 border border-border">

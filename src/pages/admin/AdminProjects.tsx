@@ -52,9 +52,32 @@ const AdminProjects = () => {
     return urlData.publicUrl;
   };
 
+  const validateImageDimensions = (file: File, minWidth = 1200, minRatio = 1.2): Promise<boolean> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const ratio = img.width / img.height;
+        if (img.width < minWidth) {
+          toast({ title: "Image too small", description: `Minimum width is ${minWidth}px. Uploaded image is ${img.width}px wide.`, variant: "destructive" });
+          resolve(false);
+        } else if (ratio < minRatio) {
+          toast({ title: "Image must be landscape", description: `Use a landscape image (at least ${minRatio}:1 ratio). Uploaded image ratio is ${ratio.toFixed(2)}:1.`, variant: "destructive" });
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+        URL.revokeObjectURL(img.src);
+      };
+      img.onerror = () => { resolve(false); URL.revokeObjectURL(img.src); };
+      img.src = URL.createObjectURL(file);
+    });
+  };
+
   const handleMainImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    const valid = await validateImageDimensions(file);
+    if (!valid) { e.target.value = ""; return; }
     setUploading(true);
     const url = await uploadImage(file);
     if (url) setForm(f => ({ ...f, image_url: url }));
@@ -134,7 +157,7 @@ const AdminProjects = () => {
 
               {/* Main Image Upload */}
               <div className="space-y-2">
-                <Label>Main Image</Label>
+                <Label>Main Image <span className="text-muted-foreground text-xs">(Recommended: 1920×1080, landscape)</span></Label>
                 <div className="flex items-center gap-3">
                   <label className="flex items-center gap-2 px-4 py-2 border border-input rounded-md cursor-pointer hover:bg-accent transition-colors text-sm">
                     <Upload className="w-4 h-4" />
