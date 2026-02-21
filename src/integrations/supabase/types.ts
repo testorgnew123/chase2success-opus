@@ -128,6 +128,7 @@ export type Database = {
           location: string
           name: string
           price: string
+          rera_number: string
           short_description: string
           slug: string
           status: string
@@ -145,6 +146,7 @@ export type Database = {
           location: string
           name: string
           price: string
+          rera_number?: string
           short_description?: string
           slug: string
           status?: string
@@ -162,6 +164,7 @@ export type Database = {
           location?: string
           name?: string
           price?: string
+          rera_number?: string
           short_description?: string
           slug?: string
           status?: string

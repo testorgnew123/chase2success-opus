@@ -27,6 +27,9 @@ const ProjectCard = ({ project }: { project: Project }) => {
           <MapPin className="w-3.5 h-3.5 text-primary" />
           <span>{project.location}</span>
         </div>
+        {project.rera_number && (
+          <p className="text-[10px] tracking-wide font-sans text-muted-foreground/70">RERA: {project.rera_number}</p>
+        )}
         <p className="text-muted-foreground text-sm leading-relaxed">{project.shortDescription}</p>
         <p className="text-primary font-serif text-xl font-bold">{project.price}</p>
         <div className="flex gap-3 pt-2">

@@ -98,10 +98,13 @@ const ProjectDetail = () => {
                 </span>
               </h1>
               <div className="editorial-divider mb-5" />
-              <div className="flex items-center gap-1.5 text-muted-foreground mb-4">
+              <div className="flex items-center gap-1.5 text-muted-foreground mb-2">
                 <MapPin className="w-4 h-4 text-primary" />
                 <span className="font-sans text-sm">{project.location}</span>
               </div>
+              {project.rera_number && (
+                <p className="text-xs tracking-wide font-sans text-muted-foreground/70 mb-4">RERA No: {project.rera_number}</p>
+              )}
               <p className="font-editorial text-base text-muted-foreground leading-relaxed max-w-sm mb-8">
                 {project.short_description}
               </p>

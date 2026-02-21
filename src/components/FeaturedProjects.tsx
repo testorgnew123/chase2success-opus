@@ -67,10 +67,13 @@ const FeaturedProjects = () => {
                 <h3 className="text-2xl md:text-3xl lg:text-4xl font-serif font-bold text-primary-foreground mb-3 group-hover:text-primary transition-colors duration-500">
                   {featured.name}
                 </h3>
-                <div className="flex items-center gap-2 text-primary-foreground/60 text-sm font-sans mb-4">
+                <div className="flex items-center gap-2 text-primary-foreground/60 text-sm font-sans mb-2">
                   <MapPin className="w-3.5 h-3.5" />
                   <span>{featured.location}</span>
                 </div>
+                {featured.rera_number && (
+                  <p className="text-[10px] tracking-wide font-sans text-primary-foreground/50 mb-4">RERA: {featured.rera_number}</p>
+                )}
                 <p className="font-editorial text-xl text-primary font-semibold">
                   {featured.price}
                 </p>
@@ -100,10 +103,13 @@ const FeaturedProjects = () => {
                   <h3 className="text-base md:text-lg font-serif font-bold text-foreground group-hover:text-primary transition-colors duration-300 mb-2 leading-tight">
                     {project.name}
                   </h3>
-                  <div className="flex items-center gap-1.5 text-muted-foreground text-xs font-sans mb-2">
+                  <div className="flex items-center gap-1.5 text-muted-foreground text-xs font-sans mb-1">
                     <MapPin className="w-3 h-3 text-primary/50" />
                     <span>{project.location}</span>
                   </div>
+                  {project.rera_number && (
+                    <p className="text-[10px] tracking-wide font-sans text-muted-foreground/70 mb-2">RERA: {project.rera_number}</p>
+                  )}
                   <p className="font-editorial text-base text-primary font-semibold">
                     {project.price}
                   </p>
