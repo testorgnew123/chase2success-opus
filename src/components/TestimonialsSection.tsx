@@ -1,16 +1,20 @@
 import { useState, useEffect } from "react";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
-import { testimonials } from "@/data/testimonials";
+import { useTestimonials } from "@/hooks/useTestimonials";
 
 const TestimonialsSection = () => {
+  const { data: testimonials, isLoading } = useTestimonials();
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
+    if (!testimonials || testimonials.length === 0) return;
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % testimonials.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [testimonials]);
+
+  if (isLoading || !testimonials || testimonials.length === 0) return null;
 
   return (
     <section className="section-padding bg-card/40">
@@ -40,7 +44,7 @@ const TestimonialsSection = () => {
             <div>
               <p className="font-serif font-bold text-foreground">{testimonials[0].name}</p>
               <p className="text-xs text-muted-foreground font-sans tracking-wide mt-1">
-                {testimonials[0].designation}
+                {testimonials[0].role}
               </p>
             </div>
           </div>
@@ -62,7 +66,7 @@ const TestimonialsSection = () => {
                 </p>
                 <div className="border-t border-border pt-4">
                   <p className="font-serif font-bold text-foreground text-sm">{t.name}</p>
-                  <p className="text-[11px] text-muted-foreground font-sans">{t.designation}</p>
+                  <p className="text-[11px] text-muted-foreground font-sans">{t.role}</p>
                 </div>
               </div>
             ))}
@@ -82,7 +86,7 @@ const TestimonialsSection = () => {
             </blockquote>
             <div>
               <p className="font-serif font-bold text-foreground">{testimonials[current].name}</p>
-              <p className="text-xs text-muted-foreground font-sans">{testimonials[current].designation}</p>
+              <p className="text-xs text-muted-foreground font-sans">{testimonials[current].role}</p>
             </div>
           </div>
           <div className="flex items-center gap-4 mt-8">
