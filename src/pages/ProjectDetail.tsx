@@ -76,7 +76,7 @@ const ProjectDetail = () => {
       {/* Split-screen Hero */}
       <section className="relative min-h-[85vh] lg:min-h-screen">
         <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[85vh] lg:min-h-screen">
-          <div className="relative flex flex-col justify-end bg-background px-6 sm:px-10 lg:px-16 xl:px-20 pb-12 pt-28 lg:pb-16 lg:pt-28 order-2 lg:order-1">
+          <div className="relative flex flex-col justify-center bg-background px-6 sm:px-10 lg:px-16 xl:px-20 pb-12 pt-28 lg:pb-16 lg:pt-28 order-2 lg:order-1">
             <div className="absolute top-28 left-6 sm:left-10 lg:left-16 xl:left-20 w-px h-16 bg-primary/20 hidden lg:block" />
             <div className="mt-auto">
               <Link to="/projects" className="inline-flex items-center gap-2 text-primary hover:text-primary/80 text-xs font-sans tracking-[0.15em] uppercase mb-8 transition-colors">
@@ -91,11 +91,18 @@ const ProjectDetail = () => {
                 </span>
               </div>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-serif font-bold leading-[0.92] tracking-tight mb-4">
-                {project.name.split(' ').slice(0, -1).join(' ')}
-                <br />
-                <span className="font-editorial font-light italic gold-gradient-text text-4xl sm:text-5xl lg:text-6xl xl:text-7xl">
-                  {project.name.split(' ').slice(-1)}
-                </span>
+                {project.name.split(' ').length > 1 ? (
+                  <>
+                    <span className="line-clamp-2">{project.name.split(' ').slice(0, -1).join(' ')}</span>
+                    <span className="font-editorial font-light italic gold-gradient-text text-4xl sm:text-5xl lg:text-6xl xl:text-7xl">
+                      {project.name.split(' ').slice(-1)}
+                    </span>
+                  </>
+                ) : (
+                  <span className="font-editorial font-light italic gold-gradient-text text-4xl sm:text-5xl lg:text-6xl xl:text-7xl">
+                    {project.name}
+                  </span>
+                )}
               </h1>
               <div className="editorial-divider mb-5" />
               <div className="flex items-center gap-1.5 text-muted-foreground mb-2">
@@ -105,7 +112,7 @@ const ProjectDetail = () => {
               {project.rera_number && (
                 <p className="text-xs tracking-wide font-sans text-muted-foreground/70 mb-4">RERA No: {project.rera_number}</p>
               )}
-              <p className="font-editorial text-base text-muted-foreground leading-relaxed max-w-sm mb-8">
+              <p className="font-editorial text-base text-muted-foreground leading-relaxed max-w-sm mb-8 line-clamp-3">
                 {project.short_description}
               </p>
               <div className="flex flex-col sm:flex-row items-start gap-3 mb-12 lg:mb-16">

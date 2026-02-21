@@ -112,7 +112,7 @@ const AdminProjects = () => {
             <DialogHeader><DialogTitle>{editing ? "Edit Project" : "New Project"}</DialogTitle></DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2"><Label>Name</Label><Input value={form.name} onChange={e => setForm(f => ({...f, name: e.target.value}))} /></div>
+                <div className="space-y-2"><Label>Name <span className="text-muted-foreground text-xs">({form.name.length}/60)</span></Label><Input value={form.name} onChange={e => setForm(f => ({...f, name: e.target.value.slice(0, 60)}))} maxLength={60} /></div>
                 <div className="space-y-2"><Label>Slug</Label><Input value={form.slug} onChange={e => setForm(f => ({...f, slug: e.target.value}))} placeholder="auto-generated" /></div>
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -149,7 +149,7 @@ const AdminProjects = () => {
                 )}
               </div>
 
-              <div className="space-y-2"><Label>Short Description</Label><Textarea value={form.short_description} onChange={e => setForm(f => ({...f, short_description: e.target.value}))} rows={2} /></div>
+              <div className="space-y-2"><Label>Short Description <span className="text-muted-foreground text-xs">({form.short_description.length}/150)</span></Label><Textarea value={form.short_description} onChange={e => setForm(f => ({...f, short_description: e.target.value.slice(0, 150)}))} rows={2} maxLength={150} /></div>
               <div className="space-y-2"><Label>Full Description</Label><Textarea value={form.description} onChange={e => setForm(f => ({...f, description: e.target.value}))} rows={4} /></div>
               <div className="space-y-2"><Label>Amenities (comma-separated)</Label><Input value={amenitiesStr} onChange={e => setAmenitiesStr(e.target.value)} /></div>
 
