@@ -5,7 +5,17 @@ import { useProjects } from "@/hooks/useProjects";
 const FeaturedProjects = () => {
   const { data: projects, isLoading } = useProjects();
 
-  if (isLoading || !projects || projects.length === 0) {
+  if (isLoading) {
+    return (
+      <section id="projects" className="section-padding bg-card/40">
+        <div className="max-w-[1440px] mx-auto text-center py-20">
+          <p className="text-muted-foreground font-sans">Loading projects...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (!projects || projects.length === 0) {
     return null;
   }
 
