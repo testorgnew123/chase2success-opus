@@ -23,13 +23,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const checkAdmin = async () => {
+  const checkAdmin = async (): Promise<boolean> => {
     try {
       const { data, error } = await supabase.rpc("is_admin");
       if (error) throw error;
       setIsAdmin(!!data);
+      return !!data;
     } catch {
       setIsAdmin(false);
+      return false;
     }
   };
 
@@ -38,8 +40,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       async (_event, session) => {
         setSession(session);
         if (session) {
-          // defer admin check to avoid deadlock
-          setTimeout(() => checkAdmin(), 0);
+          await checkAdmin();
         } else {
           setIsAdmin(false);
         }
@@ -47,9 +48,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     );
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
-      if (session) checkAdmin();
+      if (session) await checkAdmin();
       setLoading(false);
     });
 
