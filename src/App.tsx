@@ -37,6 +37,8 @@ const PageTracker = () => {
       path: location.pathname,
       referrer: document.referrer || null,
       user_agent: navigator.userAgent || null,
+    }).then(({ error }) => {
+      if (error) console.error("Failed to log visit:", error);
     });
   }, [location.pathname]);
   return null;
