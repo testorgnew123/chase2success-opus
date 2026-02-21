@@ -1,10 +1,11 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { LayoutDashboard, FolderOpen, FileText, MessageSquare, Star, LogOut } from "lucide-react";
+import { LayoutDashboard, FolderOpen, FileText, MessageSquare, Star, LogOut, BarChart3 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 
 const links = [
   { to: "/admin", icon: LayoutDashboard, label: "Dashboard", end: true },
+  { to: "/admin/analytics", icon: BarChart3, label: "Analytics" },
   { to: "/admin/projects", icon: FolderOpen, label: "Projects" },
   { to: "/admin/blogs", icon: FileText, label: "Blog Posts" },
   { to: "/admin/enquiries", icon: MessageSquare, label: "Enquiries" },
