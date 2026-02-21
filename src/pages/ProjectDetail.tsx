@@ -1,33 +1,13 @@
 import { useParams, Link } from "react-router-dom";
 import {
-  MapPin, ArrowLeft, ArrowRight, Download, ShieldCheck, Trees, Waves, Home,
-  Dumbbell, Car, Sparkles, Flower2, Wine, Theater, Eye, Zap,
-  CloudRain, Sun, Gamepad2, BriefcaseBusiness, Fence, Baby,
+  MapPin, ArrowLeft, ArrowRight, Download,
   type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useProject } from "@/hooks/useProjects";
 import SEO from "@/components/SEO";
 import EnquirySection from "@/components/EnquirySection";
-
-const amenityIconMap: Record<string, LucideIcon> = {
-  "gated community": Fence, "24/7 security": ShieldCheck, "landscaped gardens": Flower2,
-  "club house": Home, "swimming pool": Waves, "jogging track": Dumbbell,
-  "children's play area": Baby, "underground electrification": Zap,
-  "private garden": Flower2, "organic farm": Trees, "horse riding": Sparkles,
-  "spa & wellness": Sparkles, "helipad access": Sun, "concierge service": BriefcaseBusiness,
-  "concierge": BriefcaseBusiness, "wine cellar": Wine, "private elevator": Home,
-  "infinity pool": Waves, "sky lounge": Eye, "smart home": Zap, "valet parking": Car,
-  "private theater": Theater, "home theater": Theater, "rooftop observatory": Eye,
-  "rooftop garden": Flower2, "business center": BriefcaseBusiness, "indoor games": Gamepad2,
-  "gymnasium": Dumbbell, "meditation zone": Sparkles, "ev charging": Zap,
-  "solar powered": Sun, "rainwater harvesting": CloudRain, "private golf course": Trees,
-  "equestrian club": Sparkles, "italian marble": Sparkles, "private courtyard": Flower2,
-  "guest house": Home, "staff quarters": Home,
-};
-
-const getAmenityIcon = (amenity: string): LucideIcon =>
-  amenityIconMap[amenity.toLowerCase()] || Sparkles;
+import { getAmenityIcon } from "@/data/amenities";
 
 const ProjectDetail = () => {
   const { slug } = useParams();
