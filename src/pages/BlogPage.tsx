@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import { blogPosts } from "@/data/blogs";
+import { useBlogs } from "@/hooks/useBlogs";
 import SEO from "@/components/SEO";
 
 const BlogPage = () => {
+  const { data: blogPosts, isLoading } = useBlogs();
+
   return (
     <>
       <SEO
@@ -21,26 +23,38 @@ const BlogPage = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {blogPosts.map((post) => (
-            <Link key={post.id} to={`/blog/${post.slug}`} className="group bg-card border border-border rounded-lg overflow-hidden transition-all duration-500 hover:border-primary/50 hover:gold-glow">
-              <div className="aspect-[16/9] overflow-hidden">
-                <img src={post.image} alt={post.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
-              </div>
-              <div className="p-6 space-y-3">
-                <div className="flex items-center gap-3">
-                  <span className="text-xs text-primary font-sans uppercase tracking-wider">{post.category}</span>
-                  <span className="text-xs text-muted-foreground font-sans">{new Date(post.date).toLocaleDateString("en-IN", { year: "numeric", month: "long", day: "numeric" })}</span>
+        {isLoading ? (
+          <p className="text-center text-muted-foreground">Loading posts...</p>
+        ) : !blogPosts || blogPosts.length === 0 ? (
+          <p className="text-center text-muted-foreground">No blog posts available yet.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {blogPosts.map((post) => (
+              <Link key={post.id} to={`/blog/${post.slug}`} className="group bg-card border border-border rounded-lg overflow-hidden transition-all duration-500 hover:border-primary/50 hover:gold-glow">
+                {post.image_url && (
+                  <div className="aspect-[16/9] overflow-hidden">
+                    <img src={post.image_url} alt={post.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
+                  </div>
+                )}
+                <div className="p-6 space-y-3">
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs text-primary font-sans uppercase tracking-wider">{post.category}</span>
+                    {post.published_at && (
+                      <span className="text-xs text-muted-foreground font-sans">
+                        {new Date(post.published_at).toLocaleDateString("en-IN", { year: "numeric", month: "long", day: "numeric" })}
+                      </span>
+                    )}
+                  </div>
+                  <h2 className="text-xl font-serif font-bold text-foreground group-hover:text-primary transition-colors">{post.title}</h2>
+                  <p className="text-sm text-muted-foreground leading-relaxed font-sans">{post.excerpt}</p>
+                  <div className="flex items-center gap-1 text-primary text-sm font-semibold font-sans pt-1">
+                    Read More <ArrowRight className="w-4 h-4" />
+                  </div>
                 </div>
-                <h2 className="text-xl font-serif font-bold text-foreground group-hover:text-primary transition-colors">{post.title}</h2>
-                <p className="text-sm text-muted-foreground leading-relaxed font-sans">{post.excerpt}</p>
-                <div className="flex items-center gap-1 text-primary text-sm font-semibold font-sans pt-1">
-                  Read More <ArrowRight className="w-4 h-4" />
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </>
   );
