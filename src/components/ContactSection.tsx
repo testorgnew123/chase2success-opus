@@ -4,7 +4,7 @@ const contacts = [
   {
     icon: MapPin,
     title: "Visit Us",
-    lines: ["123 Business Tower, Golf Course Road", "Gurugram, Haryana 122002", "RERA No: XXXXXXXXXX"],
+    lines: ["123 Business Tower, Golf Course Road", "Gurugram, Haryana 122002", "RERA Agent No: RAJ/P/2019/942"],
   },
   {
     icon: Phone,
