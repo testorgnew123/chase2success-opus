@@ -23,44 +23,58 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const checkAdmin = async (): Promise<boolean> => {
-    try {
-      const { data, error } = await supabase.rpc("is_admin");
-      if (error) throw error;
-      setIsAdmin(!!data);
-      return !!data;
-    } catch {
-      setIsAdmin(false);
-      return false;
-    }
-  };
-
   useEffect(() => {
+    let isMounted = true;
+
+    const checkAdminRole = async () => {
+      try {
+        const { data, error } = await supabase.rpc("is_admin");
+        if (error) throw error;
+        if (isMounted) setIsAdmin(!!data);
+      } catch {
+        if (isMounted) setIsAdmin(false);
+      }
+    };
+
+    // Listener for ONGOING auth changes — never await inside, never control loading
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
+      (_event, session) => {
+        if (!isMounted) return;
         setSession(session);
         if (session) {
-          await checkAdmin();
+          setTimeout(() => checkAdminRole(), 0);
         } else {
           setIsAdmin(false);
         }
-        setLoading(false);
       }
     );
 
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      setSession(session);
-      if (session) await checkAdmin();
-      setLoading(false);
-    });
+    // INITIAL load — controls loading state
+    const initializeAuth = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!isMounted) return;
+        setSession(session);
+        if (session) {
+          await checkAdminRole();
+        }
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
 
-    return () => subscription.unsubscribe();
+    initializeAuth();
+
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signIn = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) return { error: error.message };
-    await checkAdmin();
+    // Admin check will happen via onAuthStateChange
     return { error: null };
   };
 
