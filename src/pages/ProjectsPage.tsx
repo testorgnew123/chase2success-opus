@@ -1,10 +1,27 @@
 import { Link } from "react-router-dom";
 import { MapPin, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { projects } from "@/data/projects";
+import { useProjects, type DbProject } from "@/hooks/useProjects";
 import SEO from "@/components/SEO";
 
 const ProjectsPage = () => {
+  const { data: projects, isLoading } = useProjects();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-muted-foreground font-sans">Loading projects...</p>
+      </div>
+    );
+  }
+
+  if (!projects || projects.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center pt-20">
+        <p className="text-muted-foreground font-sans">No projects available yet.</p>
+      </div>
+    );
+  }
+
   const featured = projects[0];
   const rest = projects.slice(1);
 
@@ -18,7 +35,7 @@ const ProjectsPage = () => {
       {/* Hero / Featured Project */}
       <section className="relative h-[70vh] min-h-[500px] flex items-end overflow-hidden">
         <img
-          src={featured.image}
+          src={featured.image_url}
           alt={`${featured.name} - ${featured.type}`}
           className="absolute inset-0 w-full h-full object-cover"
           loading="eager"
@@ -35,7 +52,7 @@ const ProjectsPage = () => {
             <span className="mx-2 text-border">|</span>
             <span>{featured.type}</span>
           </div>
-          <p className="text-muted-foreground max-w-xl text-sm leading-relaxed mb-6">{featured.shortDescription}</p>
+          <p className="text-muted-foreground max-w-xl text-sm leading-relaxed mb-6">{featured.short_description}</p>
           <div className="flex items-center gap-4">
             <p className="text-primary font-serif text-2xl font-bold">{featured.price}</p>
             <Link to={`/projects/${featured.slug}`}>
@@ -62,15 +79,12 @@ const ProjectsPage = () => {
           </p>
         </div>
 
-        {/* Alternating large/small grid */}
         <div className="space-y-8">
-          {/* First row: 2 equal large cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {rest.slice(0, 2).map((project) => (
               <ProjectCardLarge key={project.id} project={project} />
             ))}
           </div>
-          {/* Second row: 3 compact cards */}
           {rest.length > 2 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {rest.slice(2).map((project) => (
@@ -84,12 +98,13 @@ const ProjectsPage = () => {
   );
 };
 
-/* Large card with tall image */
-const ProjectCardLarge = ({ project }: { project: typeof projects[0] }) => (
+import { Button } from "@/components/ui/button";
+
+const ProjectCardLarge = ({ project }: { project: DbProject }) => (
   <Link to={`/projects/${project.slug}`} className="group block">
     <div className="relative overflow-hidden rounded-sm aspect-[3/4] md:aspect-[4/5]">
       <img
-        src={project.image}
+        src={project.image_url}
         alt={`${project.name} - ${project.type}`}
         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         loading="lazy"
@@ -114,13 +129,12 @@ const ProjectCardLarge = ({ project }: { project: typeof projects[0] }) => (
   </Link>
 );
 
-/* Compact card */
-const ProjectCardCompact = ({ project }: { project: typeof projects[0] }) => (
+const ProjectCardCompact = ({ project }: { project: DbProject }) => (
   <Link to={`/projects/${project.slug}`} className="group block">
     <div className="overflow-hidden rounded-sm">
       <div className="relative aspect-[4/3] overflow-hidden">
         <img
-          src={project.image}
+          src={project.image_url}
           alt={`${project.name} - ${project.type}`}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           loading="lazy"

@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Upload, X } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import type { Tables } from "@/integrations/supabase/types";
 
@@ -22,6 +22,8 @@ const AdminProjects = () => {
   const [editing, setEditing] = useState<Project | null>(null);
   const [form, setForm] = useState(emptyProject);
   const [amenitiesStr, setAmenitiesStr] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [uploadingGallery, setUploadingGallery] = useState(false);
 
   const fetchProjects = async () => {
     const { data } = await supabase.from("projects").select("*").order("created_at", { ascending: false });
@@ -36,6 +38,44 @@ const AdminProjects = () => {
     setForm({ name: p.name, slug: p.slug, location: p.location, price: p.price, description: p.description, short_description: p.short_description, image_url: p.image_url, type: p.type, status: p.status, area: p.area, amenities: p.amenities ?? [], gallery: p.gallery ?? [] });
     setAmenitiesStr((p.amenities ?? []).join(", "));
     setOpen(true);
+  };
+
+  const uploadImage = async (file: File): Promise<string | null> => {
+    const ext = file.name.split('.').pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${ext}`;
+    const { error } = await supabase.storage.from("project-images").upload(fileName, file);
+    if (error) {
+      toast({ title: "Upload failed", description: error.message, variant: "destructive" });
+      return null;
+    }
+    const { data: urlData } = supabase.storage.from("project-images").getPublicUrl(fileName);
+    return urlData.publicUrl;
+  };
+
+  const handleMainImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    const url = await uploadImage(file);
+    if (url) setForm(f => ({ ...f, image_url: url }));
+    setUploading(false);
+  };
+
+  const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    setUploadingGallery(true);
+    const urls: string[] = [];
+    for (const file of Array.from(files)) {
+      const url = await uploadImage(file);
+      if (url) urls.push(url);
+    }
+    setForm(f => ({ ...f, gallery: [...f.gallery, ...urls] }));
+    setUploadingGallery(false);
+  };
+
+  const removeGalleryImage = (index: number) => {
+    setForm(f => ({ ...f, gallery: f.gallery.filter((_, i) => i !== index) }));
   };
 
   const handleSave = async () => {
@@ -90,10 +130,54 @@ const AdminProjects = () => {
                   </select>
                 </div>
               </div>
-              <div className="space-y-2"><Label>Image URL</Label><Input value={form.image_url} onChange={e => setForm(f => ({...f, image_url: e.target.value}))} /></div>
+
+              {/* Main Image Upload */}
+              <div className="space-y-2">
+                <Label>Main Image</Label>
+                <div className="flex items-center gap-3">
+                  <label className="flex items-center gap-2 px-4 py-2 border border-input rounded-md cursor-pointer hover:bg-accent transition-colors text-sm">
+                    <Upload className="w-4 h-4" />
+                    {uploading ? "Uploading..." : "Upload Image"}
+                    <input type="file" accept="image/*" className="hidden" onChange={handleMainImageUpload} disabled={uploading} />
+                  </label>
+                  <span className="text-xs text-muted-foreground">or</span>
+                  <Input value={form.image_url} onChange={e => setForm(f => ({...f, image_url: e.target.value}))} placeholder="Paste image URL" className="flex-1" />
+                </div>
+                {form.image_url && (
+                  <img src={form.image_url} alt="Preview" className="w-32 h-24 object-cover rounded border border-border mt-2" />
+                )}
+              </div>
+
               <div className="space-y-2"><Label>Short Description</Label><Textarea value={form.short_description} onChange={e => setForm(f => ({...f, short_description: e.target.value}))} rows={2} /></div>
               <div className="space-y-2"><Label>Full Description</Label><Textarea value={form.description} onChange={e => setForm(f => ({...f, description: e.target.value}))} rows={4} /></div>
               <div className="space-y-2"><Label>Amenities (comma-separated)</Label><Input value={amenitiesStr} onChange={e => setAmenitiesStr(e.target.value)} /></div>
+
+              {/* Gallery Upload */}
+              <div className="space-y-2">
+                <Label>Gallery Images</Label>
+                <label className="flex items-center gap-2 px-4 py-2 border border-input rounded-md cursor-pointer hover:bg-accent transition-colors text-sm w-fit">
+                  <Upload className="w-4 h-4" />
+                  {uploadingGallery ? "Uploading..." : "Upload Gallery Images"}
+                  <input type="file" accept="image/*" multiple className="hidden" onChange={handleGalleryUpload} disabled={uploadingGallery} />
+                </label>
+                {form.gallery.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {form.gallery.map((url, i) => (
+                      <div key={i} className="relative group">
+                        <img src={url} alt={`Gallery ${i + 1}`} className="w-24 h-20 object-cover rounded border border-border" />
+                        <button
+                          type="button"
+                          onClick={() => removeGalleryImage(i)}
+                          className="absolute -top-1.5 -right-1.5 bg-destructive text-destructive-foreground rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               <Button onClick={handleSave} className="gold-gradient text-primary-foreground">{editing ? "Update" : "Create"}</Button>
             </div>
           </DialogContent>

@@ -6,59 +6,40 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { projects } from "@/data/projects";
+import { useProject } from "@/hooks/useProjects";
 import SEO from "@/components/SEO";
 import EnquirySection from "@/components/EnquirySection";
 
-/* Map amenity keywords → icons for visual richness */
 const amenityIconMap: Record<string, LucideIcon> = {
-  "gated community": Fence,
-  "24/7 security": ShieldCheck,
-  "landscaped gardens": Flower2,
-  "club house": Home,
-  "swimming pool": Waves,
-  "jogging track": Dumbbell,
-  "children's play area": Baby,
-  "underground electrification": Zap,
-  "private garden": Flower2,
-  "organic farm": Trees,
-  "horse riding": Sparkles,
-  "spa & wellness": Sparkles,
-  "helipad access": Sun,
-  "concierge service": BriefcaseBusiness,
-  "concierge": BriefcaseBusiness,
-  "wine cellar": Wine,
-  "private elevator": Home,
-  "infinity pool": Waves,
-  "sky lounge": Eye,
-  "smart home": Zap,
-  "valet parking": Car,
-  "private theater": Theater,
-  "home theater": Theater,
-  "rooftop observatory": Eye,
-  "rooftop garden": Flower2,
-  "business center": BriefcaseBusiness,
-  "indoor games": Gamepad2,
-  "gymnasium": Dumbbell,
-  "meditation zone": Sparkles,
-  "ev charging": Zap,
-  "solar powered": Sun,
-  "rainwater harvesting": CloudRain,
-  "private golf course": Trees,
-  "equestrian club": Sparkles,
-  "italian marble": Sparkles,
-  "private courtyard": Flower2,
-  "guest house": Home,
-  "staff quarters": Home,
+  "gated community": Fence, "24/7 security": ShieldCheck, "landscaped gardens": Flower2,
+  "club house": Home, "swimming pool": Waves, "jogging track": Dumbbell,
+  "children's play area": Baby, "underground electrification": Zap,
+  "private garden": Flower2, "organic farm": Trees, "horse riding": Sparkles,
+  "spa & wellness": Sparkles, "helipad access": Sun, "concierge service": BriefcaseBusiness,
+  "concierge": BriefcaseBusiness, "wine cellar": Wine, "private elevator": Home,
+  "infinity pool": Waves, "sky lounge": Eye, "smart home": Zap, "valet parking": Car,
+  "private theater": Theater, "home theater": Theater, "rooftop observatory": Eye,
+  "rooftop garden": Flower2, "business center": BriefcaseBusiness, "indoor games": Gamepad2,
+  "gymnasium": Dumbbell, "meditation zone": Sparkles, "ev charging": Zap,
+  "solar powered": Sun, "rainwater harvesting": CloudRain, "private golf course": Trees,
+  "equestrian club": Sparkles, "italian marble": Sparkles, "private courtyard": Flower2,
+  "guest house": Home, "staff quarters": Home,
 };
 
-const getAmenityIcon = (amenity: string): LucideIcon => {
-  return amenityIconMap[amenity.toLowerCase()] || Sparkles;
-};
+const getAmenityIcon = (amenity: string): LucideIcon =>
+  amenityIconMap[amenity.toLowerCase()] || Sparkles;
 
 const ProjectDetail = () => {
   const { slug } = useParams();
-  const project = projects.find((p) => p.slug === slug);
+  const { data: project, isLoading } = useProject(slug);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-muted-foreground font-sans">Loading...</p>
+      </div>
+    );
+  }
 
   if (!project) {
     return (
@@ -70,6 +51,9 @@ const ProjectDetail = () => {
       </div>
     );
   }
+
+  const amenities = project.amenities ?? [];
+  const gallery = project.gallery ?? [];
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -85,23 +69,19 @@ const ProjectDetail = () => {
     <>
       <SEO
         title={`${project.name} - ${project.type} | CHASE2SUCCESS`}
-        description={`${project.shortDescription} Starting at ${project.price}. Premium ${project.type.toLowerCase()} in ${project.location}.`}
+        description={`${project.short_description} Starting at ${project.price}. Premium ${project.type.toLowerCase()} in ${project.location}.`}
         jsonLd={jsonLd}
       />
 
       {/* Split-screen Hero */}
       <section className="relative min-h-[85vh] lg:min-h-screen">
         <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[85vh] lg:min-h-screen">
-          {/* Left — editorial text panel */}
           <div className="relative flex flex-col justify-end bg-background px-6 sm:px-10 lg:px-16 xl:px-20 pb-12 pt-28 lg:pb-16 lg:pt-28 order-2 lg:order-1">
-            {/* Decorative vertical line */}
             <div className="absolute top-28 left-6 sm:left-10 lg:left-16 xl:left-20 w-px h-16 bg-primary/20 hidden lg:block" />
-
             <div className="mt-auto">
               <Link to="/projects" className="inline-flex items-center gap-2 text-primary hover:text-primary/80 text-xs font-sans tracking-[0.15em] uppercase mb-8 transition-colors">
                 <ArrowLeft className="w-3.5 h-3.5" /> Back to Projects
               </Link>
-
               <div className="flex items-center gap-3 mb-4">
                 <span className="gold-gradient text-primary-foreground text-[10px] font-semibold px-3 py-1.5 rounded-sm uppercase tracking-widest">
                   {project.status}
@@ -110,7 +90,6 @@ const ProjectDetail = () => {
                   {project.type}
                 </span>
               </div>
-
               <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-serif font-bold leading-[0.92] tracking-tight mb-4">
                 {project.name.split(' ').slice(0, -1).join(' ')}
                 <br />
@@ -118,24 +97,16 @@ const ProjectDetail = () => {
                   {project.name.split(' ').slice(-1)}
                 </span>
               </h1>
-
               <div className="editorial-divider mb-5" />
-
               <div className="flex items-center gap-1.5 text-muted-foreground mb-4">
                 <MapPin className="w-4 h-4 text-primary" />
                 <span className="font-sans text-sm">{project.location}</span>
               </div>
-
               <p className="font-editorial text-base text-muted-foreground leading-relaxed max-w-sm mb-8">
-                {project.shortDescription}
+                {project.short_description}
               </p>
-
-              {/* Price + CTAs */}
               <div className="flex flex-col sm:flex-row items-start gap-3 mb-12 lg:mb-16">
-                <a
-                  href="#enquiry"
-                  className="group inline-flex items-center gap-3 gold-gradient text-primary-foreground font-sans text-xs font-semibold tracking-[0.2em] uppercase px-8 py-4 hover:opacity-90 transition-opacity"
-                >
+                <a href="#enquiry" className="group inline-flex items-center gap-3 gold-gradient text-primary-foreground font-sans text-xs font-semibold tracking-[0.2em] uppercase px-8 py-4 hover:opacity-90 transition-opacity">
                   Enquire Now
                   <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
                 </a>
@@ -144,120 +115,92 @@ const ProjectDetail = () => {
                   Brochure
                 </Button>
               </div>
-
-              {/* Key specs strip */}
               <div className="flex items-center gap-8 lg:gap-12 border-t border-border pt-8">
                 <div>
                   <p className="text-xl lg:text-2xl font-serif font-bold text-foreground leading-none mb-1">
                     {project.price.replace('Onwards', '').trim()}
                   </p>
-                  <p className="text-[10px] tracking-[0.2em] uppercase font-sans text-muted-foreground">
-                    Onwards
-                  </p>
+                  <p className="text-[10px] tracking-[0.2em] uppercase font-sans text-muted-foreground">Onwards</p>
                 </div>
                 <div className="w-px h-10 bg-border" />
                 <div>
                   <p className="text-xl lg:text-2xl font-serif font-bold text-foreground leading-none mb-1">
                     {project.area.split('-')[0].trim() || project.area}
                   </p>
-                  <p className="text-[10px] tracking-[0.2em] uppercase font-sans text-muted-foreground">
-                    Area
-                  </p>
+                  <p className="text-[10px] tracking-[0.2em] uppercase font-sans text-muted-foreground">Area</p>
                 </div>
                 <div className="w-px h-10 bg-border" />
                 <div>
                   <p className="text-xl lg:text-2xl font-serif font-bold text-foreground leading-none mb-1">
-                    {project.amenities.length}
+                    {amenities.length}
                   </p>
-                  <p className="text-[10px] tracking-[0.2em] uppercase font-sans text-muted-foreground">
-                    Amenities
-                  </p>
+                  <p className="text-[10px] tracking-[0.2em] uppercase font-sans text-muted-foreground">Amenities</p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Right — full-bleed image */}
           <div className="relative h-[45vh] lg:h-auto order-1 lg:order-2 overflow-hidden">
-            <img
-              src={project.image}
-              alt={`${project.name} in ${project.location}`}
-              className="w-full h-full object-cover"
-              loading="eager"
-            />
+            <img src={project.image_url} alt={`${project.name} in ${project.location}`} className="w-full h-full object-cover" loading="eager" />
             <div className="absolute inset-0 bg-gradient-to-l from-transparent to-background/20 hidden lg:block" />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent lg:hidden" />
-
-            {/* Floating type badge */}
             <div className="absolute bottom-6 right-6 lg:bottom-10 lg:right-10 bg-background/90 backdrop-blur-sm px-5 py-3 border border-border">
-              <p className="text-[10px] tracking-[0.2em] uppercase font-sans text-muted-foreground mb-1">
-                Category
-              </p>
-              <p className="font-serif font-bold text-foreground text-sm">
-                {project.type}
-              </p>
+              <p className="text-[10px] tracking-[0.2em] uppercase font-sans text-muted-foreground mb-1">Category</p>
+              <p className="font-serif font-bold text-foreground text-sm">{project.type}</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Content sections below the hero */}
       <section className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 py-20 md:py-28 space-y-20">
-        {/* Description */}
         <div className="max-w-3xl">
           <p className="editorial-label mb-4">About This Project</p>
           <h2 className="text-2xl md:text-3xl font-serif font-bold mb-6">
             Project <span className="gold-gradient-text">Overview</span>
           </h2>
           <div className="editorial-divider mb-6" />
-          <p className="text-muted-foreground font-sans leading-relaxed text-base">
-            {project.description}
-          </p>
+          <p className="text-muted-foreground font-sans leading-relaxed text-base">{project.description}</p>
         </div>
 
-        {/* Amenities */}
-        <div>
-          <p className="editorial-label mb-4">What's Included</p>
-          <h2 className="text-2xl md:text-3xl font-serif font-bold mb-8">
-            Amenities & <span className="gold-gradient-text">Features</span>
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {project.amenities.map((amenity) => {
-              const Icon = getAmenityIcon(amenity);
-              return (
-                <div
-                  key={amenity}
-                  className="group relative bg-card border border-border rounded-lg p-5 flex flex-col items-center text-center gap-3 transition-all duration-300 hover:border-primary/40 hover:gold-glow"
-                >
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[2px] gold-gradient rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <div className="w-10 h-10 rounded-full border border-border flex items-center justify-center transition-colors duration-300 group-hover:border-primary/50 group-hover:bg-primary/5">
-                    <Icon className="w-4.5 h-4.5 text-muted-foreground transition-colors duration-300 group-hover:text-primary" strokeWidth={1.5} />
+        {amenities.length > 0 && (
+          <div>
+            <p className="editorial-label mb-4">What's Included</p>
+            <h2 className="text-2xl md:text-3xl font-serif font-bold mb-8">
+              Amenities & <span className="gold-gradient-text">Features</span>
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {amenities.map((amenity) => {
+                const Icon = getAmenityIcon(amenity);
+                return (
+                  <div key={amenity} className="group relative bg-card border border-border rounded-lg p-5 flex flex-col items-center text-center gap-3 transition-all duration-300 hover:border-primary/40 hover:gold-glow">
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[2px] gold-gradient rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="w-10 h-10 rounded-full border border-border flex items-center justify-center transition-colors duration-300 group-hover:border-primary/50 group-hover:bg-primary/5">
+                      <Icon className="w-4.5 h-4.5 text-muted-foreground transition-colors duration-300 group-hover:text-primary" strokeWidth={1.5} />
+                    </div>
+                    <span className="text-xs font-sans font-medium text-foreground/80 leading-tight tracking-wide">{amenity}</span>
                   </div>
-                  <span className="text-xs font-sans font-medium text-foreground/80 leading-tight tracking-wide">
-                    {amenity}
-                  </span>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {gallery.length > 0 && (
+          <div>
+            <p className="editorial-label mb-4">Visual Tour</p>
+            <h2 className="text-2xl md:text-3xl font-serif font-bold mb-8">
+              Project <span className="gold-gradient-text">Gallery</span>
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {gallery.map((img, i) => (
+                <div key={i} className="rounded-lg overflow-hidden aspect-[4/3]">
+                  <img src={img} alt={`${project.name} gallery image ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
                 </div>
-              );
-            })}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Gallery */}
-        <div>
-          <p className="editorial-label mb-4">Visual Tour</p>
-          <h2 className="text-2xl md:text-3xl font-serif font-bold mb-8">
-            Project <span className="gold-gradient-text">Gallery</span>
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {project.gallery.map((img, i) => (
-              <div key={i} className="rounded-lg overflow-hidden aspect-[4/3]">
-                <img src={img} alt={`${project.name} gallery image ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Map */}
         <div>
           <p className="editorial-label mb-4">Find Us</p>
           <h2 className="text-2xl md:text-3xl font-serif font-bold mb-8">

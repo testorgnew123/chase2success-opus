@@ -1,15 +1,20 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, MapPin } from "lucide-react";
-import { projects } from "@/data/projects";
+import { useProjects } from "@/hooks/useProjects";
 
 const FeaturedProjects = () => {
+  const { data: projects, isLoading } = useProjects();
+
+  if (isLoading || !projects || projects.length === 0) {
+    return null;
+  }
+
   const featured = projects[0];
   const secondary = projects.slice(1, 4);
 
   return (
     <section id="projects" className="section-padding bg-card/40">
       <div className="max-w-[1440px] mx-auto">
-        {/* Header — editorial left-aligned */}
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-16">
           <div>
             <div className="flex items-center gap-4 mb-6">
@@ -32,16 +37,11 @@ const FeaturedProjects = () => {
           </Link>
         </div>
 
-        {/* Editorial asymmetric grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
-          {/* Large featured card */}
-          <Link
-            to={`/projects/${featured.slug}`}
-            className="lg:col-span-7 group block"
-          >
+          <Link to={`/projects/${featured.slug}`} className="lg:col-span-7 group block">
             <div className="relative overflow-hidden aspect-[4/5] lg:aspect-[3/4]">
               <img
-                src={featured.image}
+                src={featured.image_url}
                 alt={`${featured.name} - ${featured.type}`}
                 className="w-full h-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105"
                 loading="lazy"
@@ -68,7 +68,6 @@ const FeaturedProjects = () => {
             </div>
           </Link>
 
-          {/* Stacked secondary cards */}
           <div className="lg:col-span-5 flex flex-col gap-6 lg:gap-8">
             {secondary.map((project) => (
               <Link
@@ -78,7 +77,7 @@ const FeaturedProjects = () => {
               >
                 <div className="relative overflow-hidden w-28 h-28 md:w-36 md:h-36 flex-shrink-0">
                   <img
-                    src={project.image}
+                    src={project.image_url}
                     alt={`${project.name} - ${project.type}`}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     loading="lazy"
