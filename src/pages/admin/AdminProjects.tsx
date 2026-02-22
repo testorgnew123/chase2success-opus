@@ -1,19 +1,21 @@
 import { useEffect, useState, useRef } from "react";
 import { neon } from "@/lib/neon";
-import { uploadToCloudinary } from "@/lib/cloudinary";
+import { uploadToCloudinary, uploadFileToCloudinary } from "@/lib/cloudinary";
+// Lazy-loaded to avoid bundling pdf.js + jsPDF for all users
+const loadCompressor = () => import("@/lib/compress-pdf").then(m => m.compressPdf);
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
-import { Plus, Pencil, Trash2, Upload, X } from "lucide-react";
+import { Plus, Pencil, Trash2, Upload, X, FileText } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import type { Project } from "@/lib/db-types";
 import { AMENITY_NAMES, getAmenityIcon } from "@/data/amenities";
 
 const emptyProject = {
   name: "", slug: "", location: "", price: "", description: "", short_description: "",
-  image_url: "", type: "", status: "draft", area: "", rera_number: "", amenities: [] as string[], gallery: [] as string[],
+  image_url: "", type: "", status: "draft", area: "", rera_number: "", brochure_url: "", amenities: [] as string[], gallery: [] as string[],
 };
 
 const AdminProjects = () => {
@@ -27,6 +29,7 @@ const AdminProjects = () => {
   const amenityInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadingGallery, setUploadingGallery] = useState(false);
+  const [uploadingBrochure, setUploadingBrochure] = useState(false);
 
   const fetchProjects = async () => {
     const { data } = await neon.from("projects").select("*").order("created_at", { ascending: false });
@@ -38,7 +41,7 @@ const AdminProjects = () => {
   const openNew = () => { setEditing(null); setForm(emptyProject); setAmenitiesStr(""); setOpen(true); };
   const openEdit = (p: Project) => {
     setEditing(p);
-    setForm({ name: p.name, slug: p.slug, location: p.location, price: p.price, description: p.description, short_description: p.short_description, image_url: p.image_url, type: p.type, status: p.status, area: p.area, rera_number: p.rera_number, amenities: p.amenities ?? [], gallery: p.gallery ?? [] });
+    setForm({ name: p.name, slug: p.slug, location: p.location, price: p.price, description: p.description, short_description: p.short_description, image_url: p.image_url, type: p.type, status: p.status, area: p.area, rera_number: p.rera_number, brochure_url: p.brochure_url ?? "", amenities: p.amenities ?? [], gallery: p.gallery ?? [] });
     setAmenitiesStr((p.amenities ?? []).join(", "));
     setOpen(true);
   };
@@ -94,6 +97,40 @@ const AdminProjects = () => {
     }
     setForm(f => ({ ...f, gallery: [...f.gallery, ...urls] }));
     setUploadingGallery(false);
+  };
+
+  const handleBrochureUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.type !== "application/pdf") {
+      toast({ title: "Invalid file", description: "Please upload a PDF file", variant: "destructive" });
+      e.target.value = "";
+      return;
+    }
+    setUploadingBrochure(true);
+    try {
+      let processedFile = file;
+      const maxSize = 10 * 1024 * 1024; // 10 MB
+      if (file.size > maxSize) {
+        toast({ title: "Compressing PDF", description: `File is ${(file.size / 1024 / 1024).toFixed(1)} MB. Compressing to fit under 10 MB...` });
+        const compressPdf = await loadCompressor();
+        processedFile = await compressPdf(file, maxSize);
+        const savedPct = ((1 - processedFile.size / file.size) * 100).toFixed(0);
+        toast({ title: "Compression done", description: `Reduced from ${(file.size / 1024 / 1024).toFixed(1)} MB to ${(processedFile.size / 1024 / 1024).toFixed(1)} MB (${savedPct}% smaller)` });
+      }
+      const url = await uploadFileToCloudinary(processedFile, "project-brochures");
+      if (url) {
+        setForm(f => ({ ...f, brochure_url: url }));
+        toast({ title: "Brochure uploaded" });
+      } else {
+        toast({ title: "Upload failed", description: "Could not upload brochure", variant: "destructive" });
+      }
+    } catch (err) {
+      console.error("Brochure processing error:", err);
+      toast({ title: "Error", description: "Failed to process brochure. Try a smaller file.", variant: "destructive" });
+    }
+    setUploadingBrochure(false);
+    e.target.value = "";
   };
 
   const removeGalleryImage = (index: number) => {
@@ -284,6 +321,29 @@ const AdminProjects = () => {
                     ))}
                   </div>
                 )}
+              </div>
+
+              {/* Brochure Upload */}
+              <div className="space-y-2">
+                <Label>Brochure (PDF)</Label>
+                <div className="flex items-center gap-3">
+                  <label className="flex items-center gap-2 px-4 py-2 border border-input rounded-md cursor-pointer hover:bg-accent transition-colors text-sm">
+                    <Upload className="w-4 h-4" />
+                    {uploadingBrochure ? "Uploading..." : "Upload Brochure"}
+                    <input type="file" accept=".pdf,application/pdf" className="hidden" onChange={handleBrochureUpload} disabled={uploadingBrochure} />
+                  </label>
+                  {form.brochure_url && (
+                    <div className="flex items-center gap-2 flex-1 min-w-0">
+                      <a href={form.brochure_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-sm text-primary hover:underline truncate">
+                        <FileText className="w-4 h-4 shrink-0" />
+                        Brochure uploaded
+                      </a>
+                      <button type="button" onClick={() => setForm(f => ({ ...f, brochure_url: "" }))} className="text-destructive hover:text-destructive/80">
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
 
               <Button onClick={handleSave} className="gold-gradient text-primary-foreground">{editing ? "Update" : "Create"}</Button>

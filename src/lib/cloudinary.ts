@@ -29,3 +29,32 @@ export async function uploadToCloudinary(
     return null;
   }
 }
+
+export async function uploadFileToCloudinary(
+  file: File,
+  folder: string = "project-brochures"
+): Promise<string | null> {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", UPLOAD_PRESET);
+  formData.append("folder", folder);
+
+  try {
+    const res = await fetch(
+      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+      { method: "POST", body: formData }
+    );
+
+    if (!res.ok) {
+      const err = await res.json();
+      console.error("Cloudinary file upload error:", err);
+      return null;
+    }
+
+    const data = await res.json();
+    return data.secure_url;
+  } catch (err) {
+    console.error("Cloudinary file upload failed:", err);
+    return null;
+  }
+}

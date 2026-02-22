@@ -100,10 +100,14 @@ const ProjectDetail = () => {
                   Enquire Now
                   <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
                 </a>
-                <Button variant="outline" className="border-border text-foreground font-sans text-xs font-medium tracking-[0.15em] uppercase px-8 py-4 h-auto hover:border-primary hover:text-primary transition-all">
-                  <Download className="w-3.5 h-3.5 mr-2" />
-                  Brochure
-                </Button>
+                {project.brochure_url && (
+                  <a href={project.brochure_url} target="_blank" rel="noopener noreferrer">
+                    <Button variant="outline" className="border-border text-foreground font-sans text-xs font-medium tracking-[0.15em] uppercase px-8 py-4 h-auto hover:border-primary hover:text-primary transition-all">
+                      <Download className="w-3.5 h-3.5 mr-2" />
+                      Brochure
+                    </Button>
+                  </a>
+                )}
               </div>
               <div className="flex items-center gap-8 lg:gap-12 border-t border-border pt-8">
                 <div>

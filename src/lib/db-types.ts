@@ -13,6 +13,7 @@ export interface Project {
   status: string;
   area: string;
   rera_number: string;
+  brochure_url: string;
   created_at: string;
   updated_at: string;
 }
