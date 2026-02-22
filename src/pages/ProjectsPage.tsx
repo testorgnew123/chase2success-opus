@@ -22,8 +22,15 @@ const ProjectsPage = () => {
     );
   }
 
-  const featured = projects[0];
-  const rest = projects.slice(1);
+  // Prioritize featured projects for the hero section
+  const sorted = [...projects].sort((a, b) => {
+    if (a.is_featured && !b.is_featured) return -1;
+    if (!a.is_featured && b.is_featured) return 1;
+    return 0;
+  });
+
+  const featured = sorted[0];
+  const rest = sorted.slice(1);
 
   return (
     <>

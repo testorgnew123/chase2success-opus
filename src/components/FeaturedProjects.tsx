@@ -19,8 +19,15 @@ const FeaturedProjects = () => {
     return null;
   }
 
-  const featured = projects[0];
-  const secondary = projects.slice(1, 4);
+  // Prioritize featured projects, then sort by created_at
+  const sorted = [...projects].sort((a, b) => {
+    if (a.is_featured && !b.is_featured) return -1;
+    if (!a.is_featured && b.is_featured) return 1;
+    return 0;
+  });
+
+  const featured = sorted[0];
+  const secondary = sorted.slice(1, 4);
 
   return (
     <section id="projects" className="section-padding bg-card/40">

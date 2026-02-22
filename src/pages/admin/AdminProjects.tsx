@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { neon } from "@/lib/neon";
 import { uploadToCloudinary, uploadFileToCloudinary } from "@/lib/cloudinary";
+import { compressImage } from "@/lib/compress-image";
 // Lazy-loaded to avoid bundling pdf.js + jsPDF for all users
 const loadCompressor = () => import("@/lib/compress-pdf").then(m => m.compressPdf);
 import { Button } from "@/components/ui/button";
@@ -8,14 +9,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
-import { Plus, Pencil, Trash2, Upload, X, FileText } from "lucide-react";
+import { Plus, Pencil, Trash2, Upload, X, FileText, Star } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import type { Project } from "@/lib/db-types";
 import { AMENITY_NAMES, getAmenityIcon } from "@/data/amenities";
 
 const emptyProject = {
   name: "", slug: "", location: "", price: "", description: "", short_description: "",
-  image_url: "", type: "", status: "draft", area: "", rera_number: "", brochure_url: "", amenities: [] as string[], gallery: [] as string[],
+  image_url: "", type: "", status: "draft", area: "", rera_number: "", brochure_url: "", is_featured: false, amenities: [] as string[], gallery: [] as string[],
 };
 
 const AdminProjects = () => {
@@ -41,13 +42,21 @@ const AdminProjects = () => {
   const openNew = () => { setEditing(null); setForm(emptyProject); setAmenitiesStr(""); setOpen(true); };
   const openEdit = (p: Project) => {
     setEditing(p);
-    setForm({ name: p.name, slug: p.slug, location: p.location, price: p.price, description: p.description, short_description: p.short_description, image_url: p.image_url, type: p.type, status: p.status, area: p.area, rera_number: p.rera_number, brochure_url: p.brochure_url ?? "", amenities: p.amenities ?? [], gallery: p.gallery ?? [] });
+    setForm({ name: p.name, slug: p.slug, location: p.location, price: p.price, description: p.description, short_description: p.short_description, image_url: p.image_url, type: p.type, status: p.status, area: p.area, rera_number: p.rera_number, brochure_url: p.brochure_url ?? "", is_featured: p.is_featured ?? false, amenities: p.amenities ?? [], gallery: p.gallery ?? [] });
     setAmenitiesStr((p.amenities ?? []).join(", "));
     setOpen(true);
   };
 
   const uploadImage = async (file: File): Promise<string | null> => {
-    const url = await uploadToCloudinary(file, "project-images");
+    const maxSize = 10 * 1024 * 1024; // 10 MB
+    let processedFile = file;
+    if (file.size > maxSize) {
+      toast({ title: "Compressing image", description: `Image is ${(file.size / 1024 / 1024).toFixed(1)} MB. Compressing to fit under 10 MB...` });
+      processedFile = await compressImage(file, maxSize);
+      const savedPct = ((1 - processedFile.size / file.size) * 100).toFixed(0);
+      toast({ title: "Compression done", description: `Reduced from ${(file.size / 1024 / 1024).toFixed(1)} MB to ${(processedFile.size / 1024 / 1024).toFixed(1)} MB (${savedPct}% smaller)` });
+    }
+    const url = await uploadToCloudinary(processedFile, "project-images");
     if (!url) {
       toast({ title: "Upload failed", description: "Could not upload image", variant: "destructive" });
     }
@@ -189,7 +198,20 @@ const AdminProjects = () => {
                   </select>
                 </div>
               </div>
-              <div className="space-y-2"><Label>RERA Number</Label><Input value={form.rera_number} onChange={e => setForm(f => ({...f, rera_number: e.target.value}))} placeholder="e.g. RAJ/P/2019/942" /></div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2"><Label>RERA Number</Label><Input value={form.rera_number} onChange={e => setForm(f => ({...f, rera_number: e.target.value}))} placeholder="e.g. RAJ/P/2019/942" /></div>
+                <div className="space-y-2">
+                  <Label>Featured Project</Label>
+                  <button
+                    type="button"
+                    onClick={() => setForm(f => ({ ...f, is_featured: !f.is_featured }))}
+                    className={`w-full h-10 rounded-md border px-3 text-sm flex items-center gap-2 transition-colors ${form.is_featured ? 'border-primary bg-primary/10 text-primary' : 'border-input bg-background text-muted-foreground hover:bg-accent'}`}
+                  >
+                    <Star className={`w-4 h-4 ${form.is_featured ? 'fill-primary' : ''}`} />
+                    {form.is_featured ? "Featured" : "Not Featured"}
+                  </button>
+                </div>
+              </div>
 
               {/* Main Image Upload */}
               <div className="space-y-2">
@@ -359,6 +381,7 @@ const AdminProjects = () => {
             <th className="text-left p-3 font-sans font-medium">Location</th>
             <th className="text-left p-3 font-sans font-medium">Price</th>
             <th className="text-left p-3 font-sans font-medium">Status</th>
+            <th className="text-center p-3 font-sans font-medium">Featured</th>
             <th className="text-right p-3 font-sans font-medium">Actions</th>
           </tr></thead>
           <tbody>
@@ -368,13 +391,26 @@ const AdminProjects = () => {
                 <td className="p-3 text-muted-foreground">{p.location}</td>
                 <td className="p-3 text-primary font-medium">{p.price}</td>
                 <td className="p-3"><span className={`text-xs px-2 py-1 rounded-full ${p.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>{p.status}</span></td>
+                <td className="p-3 text-center">
+                  <button
+                    onClick={async () => {
+                      await neon.from("projects").update({ is_featured: !p.is_featured }).eq("id", p.id);
+                      fetchProjects();
+                      toast({ title: p.is_featured ? "Removed from featured" : "Marked as featured" });
+                    }}
+                    className="inline-flex items-center justify-center"
+                    title={p.is_featured ? "Remove from featured" : "Mark as featured"}
+                  >
+                    <Star className={`w-5 h-5 transition-colors ${p.is_featured ? 'fill-primary text-primary' : 'text-muted-foreground/40 hover:text-primary/60'}`} />
+                  </button>
+                </td>
                 <td className="p-3 text-right space-x-2">
                   <Button variant="ghost" size="icon" onClick={() => openEdit(p)}><Pencil className="w-4 h-4" /></Button>
                   <Button variant="ghost" size="icon" onClick={() => handleDelete(p.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
                 </td>
               </tr>
             ))}
-            {projects.length === 0 && <tr><td colSpan={5} className="p-6 text-center text-muted-foreground">No projects yet</td></tr>}
+            {projects.length === 0 && <tr><td colSpan={6} className="p-6 text-center text-muted-foreground">No projects yet</td></tr>}
           </tbody>
         </table>
       </div>

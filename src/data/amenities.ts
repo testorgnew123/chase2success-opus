@@ -140,6 +140,26 @@ export const AMENITIES_LIST: AmenityDef[] = [
   { name: "Balcony", icon: Landmark, category: "interior" },
   { name: "Large Windows", icon: Sun, category: "interior" },
   { name: "Walk-in Closet", icon: Shirt, category: "interior" },
+
+  // Riviera-specific amenities
+  { name: "Skywalk", icon: Globe, category: "lifestyle" },
+  { name: "AC Gymnasium", icon: Dumbbell, category: "wellness" },
+  { name: "Yoga Room & Yoga Deck", icon: Sparkles, category: "wellness" },
+  { name: "Steam & Sauna Bath", icon: Droplets, category: "wellness" },
+  { name: "Massage Facility", icon: Heart, category: "wellness" },
+  { name: "Multipurpose Hall with Party Lawn", icon: Music, category: "recreation" },
+  { name: "Indoor Games - Pool Table TT Chess Carrom", icon: Gamepad2, category: "recreation" },
+  { name: "Water Body & Fountain", icon: Droplets, category: "nature" },
+  { name: "Reception Lobby (Air-Conditioned)", icon: Building2, category: "lifestyle" },
+  { name: "Kids Gaming Zone", icon: Baby, category: "recreation" },
+  { name: "Rooftop Food Court", icon: UtensilsCrossed, category: "lifestyle" },
+  { name: "Modular Kitchen with Gas Bank", icon: Refrigerator, category: "interior" },
+  { name: "UPVC French Windows", icon: Sun, category: "interior" },
+  { name: "Jaquar Premium Sanitary Fittings", icon: Bath, category: "interior" },
+  { name: "Premium Vitrified Tiles", icon: Sparkles, category: "interior" },
+  { name: "Hi-End Electrical Switches", icon: Zap, category: "infrastructure" },
+  { name: "Provision for AC in all rooms", icon: AirVent, category: "interior" },
+  { name: "Basement Parking", icon: ParkingCircle, category: "transport" },
 ];
 
 // Build a lookup map (case-insensitive) for icon resolution

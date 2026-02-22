@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { neon } from "@/lib/neon";
 import { uploadToCloudinary } from "@/lib/cloudinary";
+import { compressImage } from "@/lib/compress-image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -36,7 +37,15 @@ const AdminBlogs = () => {
   const openEdit = (b: Blog) => { setEditing(b); setForm({ title: b.title, slug: b.slug, excerpt: b.excerpt, content: b.content, image_url: b.image_url, category: b.category, author: b.author, status: b.status }); setContentMode("write"); setGeneratedUrl(""); setOpen(true); };
 
   const uploadImage = async (file: File): Promise<string | null> => {
-    const url = await uploadToCloudinary(file, "blog-images");
+    const maxSize = 10 * 1024 * 1024; // 10 MB
+    let processedFile = file;
+    if (file.size > maxSize) {
+      toast({ title: "Compressing image", description: `Image is ${(file.size / 1024 / 1024).toFixed(1)} MB. Compressing to fit under 10 MB...` });
+      processedFile = await compressImage(file, maxSize);
+      const savedPct = ((1 - processedFile.size / file.size) * 100).toFixed(0);
+      toast({ title: "Compression done", description: `Reduced from ${(file.size / 1024 / 1024).toFixed(1)} MB to ${(processedFile.size / 1024 / 1024).toFixed(1)} MB (${savedPct}% smaller)` });
+    }
+    const url = await uploadToCloudinary(processedFile, "blog-images");
     if (!url) {
       toast({ title: "Upload failed", description: "Could not upload image", variant: "destructive" });
     }
