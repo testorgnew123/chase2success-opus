@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { neon } from "@/lib/neon";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
-import { Mail, Check } from "lucide-react";
+import { Phone, Check } from "lucide-react";
 import type { Enquiry } from "@/lib/db-types";
 
 const AdminEnquiries = () => {
@@ -31,7 +31,7 @@ const AdminEnquiries = () => {
                   <h3 className="font-medium">{e.name}</h3>
                   {!e.is_read && <span className="w-2 h-2 rounded-full bg-primary" />}
                 </div>
-                <p className="text-sm text-muted-foreground">{e.email} {e.phone && `· ${e.phone}`}</p>
+                <p className="text-sm text-muted-foreground">{e.phone}</p>
                 {e.project_name && <p className="text-xs text-primary mt-1">Re: {e.project_name}</p>}
               </div>
               <div className="flex items-center gap-2">
@@ -39,7 +39,7 @@ const AdminEnquiries = () => {
                 {!e.is_read && (
                   <Button variant="ghost" size="icon" onClick={() => markRead(e.id)} title="Mark as read"><Check className="w-4 h-4" /></Button>
                 )}
-                <a href={`mailto:${e.email}`}><Button variant="ghost" size="icon"><Mail className="w-4 h-4" /></Button></a>
+                <a href={`tel:${e.phone}`}><Button variant="ghost" size="icon"><Phone className="w-4 h-4" /></Button></a>
               </div>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">{e.message}</p>

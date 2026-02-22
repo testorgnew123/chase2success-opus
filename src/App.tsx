@@ -29,6 +29,15 @@ import AdminTestimonials from "./pages/admin/AdminTestimonials";
 
 const queryClient = new QueryClient();
 
+// Scroll to top on route change
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
+
 // Track page visits
 const PageTracker = () => {
   const location = useLocation();
@@ -73,6 +82,7 @@ const App = () => (
         <Sonner />
         <AuthProvider>
           <BrowserRouter>
+            <ScrollToTop />
             <PageTracker />
             <Routes>
               <Route path="/admin/login" element={<AdminLogin />} />

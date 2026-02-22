@@ -4,17 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { neon } from "@/lib/neon";
-import { useProjects } from "@/hooks/useProjects";
 import { toast } from "@/hooks/use-toast";
 
-const EnquirySection = () => {
-  const [formData, setFormData] = useState({ name: "", email: "", mobile: "", project: "", message: "" });
+const EnquirySection = ({ projectName }: { projectName?: string }) => {
+  const [formData, setFormData] = useState({ name: "", mobile: "", message: "" });
   const [submitting, setSubmitting] = useState(false);
-  const { data: projects } = useProjects();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.mobile) {
+    if (!formData.name || !formData.mobile) {
       toast({ title: "Please fill all required fields", variant: "destructive" });
       return;
     }
@@ -22,18 +20,34 @@ const EnquirySection = () => {
     try {
       const { error } = await neon.from("enquiries").insert({
         name: formData.name,
-        email: formData.email,
+        email: "",
         phone: formData.mobile,
-        project_name: formData.project || null,
-        message: formData.message || `Interested in ${formData.project || "your projects"}`,
+        project_name: projectName || null,
+        message: formData.message || `Interested in ${projectName || "your projects"}`,
       });
       if (error) throw error;
 
+      // Send email notification to admin
+      try {
+        await fetch("/.netlify/functions/send-enquiry", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: formData.name,
+            mobile: formData.mobile,
+            message: formData.message || "",
+            projectName: projectName || "",
+          }),
+        });
+      } catch {
+        // Email sending failed silently — enquiry is already saved in DB
+      }
+
       toast({ title: "Enquiry submitted!", description: "We'll get back to you within 24 hours." });
-      setFormData({ name: "", email: "", mobile: "", project: "", message: "" });
+      setFormData({ name: "", mobile: "", message: "" });
     } catch {
       toast({ title: "Enquiry saved!", description: "We'll contact you soon." });
-      setFormData({ name: "", email: "", mobile: "", project: "", message: "" });
+      setFormData({ name: "", mobile: "", message: "" });
     } finally {
       setSubmitting(false);
     }
@@ -82,28 +96,10 @@ const EnquirySection = () => {
                     className="bg-background border-border text-foreground placeholder:text-foreground/80 focus:border-primary h-12" />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-sans text-foreground tracking-wide uppercase">Email *</label>
-                  <Input type="email" placeholder="Enter your email" value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })} required
-                    className="bg-background border-border text-foreground placeholder:text-foreground/80 focus:border-primary h-12" />
-                </div>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="space-y-2">
                   <label className="text-xs font-sans text-foreground tracking-wide uppercase">Mobile Number *</label>
                   <Input type="tel" placeholder="Enter your mobile number" value={formData.mobile}
                     onChange={(e) => setFormData({ ...formData, mobile: e.target.value })} required
                     className="bg-background border-border text-foreground placeholder:text-foreground/80 focus:border-primary h-12" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-sans text-foreground tracking-wide uppercase">Interested Project</label>
-                  <select value={formData.project} onChange={(e) => setFormData({ ...formData, project: e.target.value })}
-                    className="flex h-12 w-full border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary font-sans">
-                    <option value="">Select a project</option>
-                    {projects?.map((p) => (
-                      <option key={p.id} value={p.name}>{p.name}</option>
-                    ))}
-                  </select>
                 </div>
               </div>
               <div className="space-y-2">

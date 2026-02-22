@@ -83,14 +83,6 @@ const HeroSection = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent lg:hidden" />
 
           {/* Floating badge on image */}
-          <div className="absolute bottom-6 right-6 lg:bottom-10 lg:right-10 bg-background/90 backdrop-blur-sm px-5 py-3 border border-border">
-            <p className="text-[10px] tracking-[0.2em] uppercase font-sans text-foreground/80 mb-1">
-              Featured
-            </p>
-            <p className="font-serif font-bold text-foreground text-sm">
-              Royal Greens, Noida
-            </p>
-          </div>
         </div>
       </div>
     </section>

@@ -14,6 +14,7 @@ export interface Project {
   area: string;
   rera_number: string;
   brochure_url: string;
+  map_url: string | null;
   is_featured: boolean;
   created_at: string;
   updated_at: string;

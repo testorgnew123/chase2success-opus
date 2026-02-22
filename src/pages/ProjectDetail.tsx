@@ -320,18 +320,29 @@ const ProjectDetail = () => {
           </div>
         )}
 
-        <div>
-          <p className="editorial-label mb-4">Find Us</p>
-          <h2 className="text-2xl md:text-3xl font-serif font-bold mb-8">
-            Location <span className="gold-gradient-text">Map</span>
-          </h2>
-          <div className="rounded-lg border border-border h-64 bg-secondary flex items-center justify-center">
-            <p className="text-foreground/80 font-sans text-sm">Map will be embedded here</p>
+        {project.map_url && (
+          <div>
+            <p className="editorial-label mb-4">Find Us</p>
+            <h2 className="text-2xl md:text-3xl font-serif font-bold mb-8">
+              Location <span className="gold-gradient-text">Map</span>
+            </h2>
+            <div className="rounded-lg border border-border overflow-hidden">
+              <iframe
+                src={project.map_url}
+                width="100%"
+                height="400"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title={`${project.name} location map`}
+              />
+            </div>
           </div>
-        </div>
+        )}
       </section>
 
-      <EnquirySection />
+      <EnquirySection projectName={project.name} />
     </>
   );
 };

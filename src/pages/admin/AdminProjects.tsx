@@ -16,7 +16,7 @@ import { AMENITY_NAMES, getAmenityIcon } from "@/data/amenities";
 
 const emptyProject = {
   name: "", slug: "", location: "", price: "", description: "", short_description: "",
-  image_url: "", type: "", status: "draft", area: "", rera_number: "", brochure_url: "", is_featured: false, amenities: [] as string[], gallery: [] as string[],
+  image_url: "", type: "", status: "draft", area: "", rera_number: "", brochure_url: "", map_url: "", is_featured: false, amenities: [] as string[], gallery: [] as string[],
 };
 
 const AdminProjects = () => {
@@ -42,7 +42,7 @@ const AdminProjects = () => {
   const openNew = () => { setEditing(null); setForm(emptyProject); setAmenitiesStr(""); setOpen(true); };
   const openEdit = (p: Project) => {
     setEditing(p);
-    setForm({ name: p.name, slug: p.slug, location: p.location, price: p.price, description: p.description, short_description: p.short_description, image_url: p.image_url, type: p.type, status: p.status, area: p.area, rera_number: p.rera_number, brochure_url: p.brochure_url ?? "", is_featured: p.is_featured ?? false, amenities: p.amenities ?? [], gallery: p.gallery ?? [] });
+    setForm({ name: p.name, slug: p.slug, location: p.location, price: p.price, description: p.description, short_description: p.short_description, image_url: p.image_url, type: p.type, status: p.status, area: p.area, rera_number: p.rera_number, brochure_url: p.brochure_url ?? "", map_url: p.map_url ?? "", is_featured: p.is_featured ?? false, amenities: p.amenities ?? [], gallery: p.gallery ?? [] });
     setAmenitiesStr((p.amenities ?? []).join(", "));
     setOpen(true);
   };
@@ -147,7 +147,9 @@ const AdminProjects = () => {
   };
 
   const handleSave = async () => {
-    const payload = { ...form, amenities: amenitiesStr.split(",").map(s => s.trim()).filter(Boolean), slug: form.slug || form.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "") };
+    const { map_url, ...rest } = form;
+    const payload: Record<string, unknown> = { ...rest, amenities: amenitiesStr.split(",").map(s => s.trim()).filter(Boolean), slug: form.slug || form.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "") };
+    if (map_url) payload.map_url = map_url;
     if (editing) {
       const { error } = await neon.from("projects").update(payload).eq("id", editing.id);
       if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
@@ -366,6 +368,13 @@ const AdminProjects = () => {
                     </div>
                   )}
                 </div>
+              </div>
+
+              {/* Map Embed URL */}
+              <div className="space-y-2">
+                <Label>Google Map Embed URL</Label>
+                <Input value={form.map_url} onChange={e => setForm(f => ({...f, map_url: e.target.value}))} placeholder="Paste Google Maps embed URL (src from iframe)" />
+                <p className="text-[11px] text-muted-foreground">Go to Google Maps → Share → Embed a map → Copy the src URL from the iframe code</p>
               </div>
 
               <Button onClick={handleSave} className="gold-gradient text-primary-foreground">{editing ? "Update" : "Create"}</Button>
