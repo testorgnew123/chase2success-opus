@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
-  MapPin, ArrowLeft, ArrowRight, Download,
+  MapPin, ArrowLeft, ArrowRight, Download, X, ChevronLeft, ChevronRight,
   type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,9 +10,122 @@ import SEO from "@/components/SEO";
 import EnquirySection from "@/components/EnquirySection";
 import { getAmenityIcon } from "@/data/amenities";
 
+/* ─── Fullscreen Gallery Lightbox ─── */
+const GalleryLightbox = ({
+  images,
+  startIndex,
+  onClose,
+}: {
+  images: string[];
+  startIndex: number;
+  onClose: () => void;
+}) => {
+  const [current, setCurrent] = useState(startIndex);
+  const touchStart = useRef<number | null>(null);
+  const touchDelta = useRef(0);
+
+  const prev = useCallback(() => setCurrent((c) => (c === 0 ? images.length - 1 : c - 1)), [images.length]);
+  const next = useCallback(() => setCurrent((c) => (c === images.length - 1 ? 0 : c + 1)), [images.length]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "ArrowRight") next();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose, prev, next]);
+
+  // Lock body scroll
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
+  // Touch / swipe handlers
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStart.current = e.touches[0].clientX;
+    touchDelta.current = 0;
+  };
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (touchStart.current === null) return;
+    touchDelta.current = e.touches[0].clientX - touchStart.current;
+  };
+  const onTouchEnd = () => {
+    if (Math.abs(touchDelta.current) > 60) {
+      if (touchDelta.current > 0) prev();
+      else next();
+    }
+    touchStart.current = null;
+    touchDelta.current = 0;
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center"
+      onClick={onClose}
+    >
+      {/* Close button */}
+      <button
+        onClick={onClose}
+        className="absolute top-4 right-4 z-10 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-2 transition-colors"
+        aria-label="Close gallery"
+      >
+        <X className="w-6 h-6" />
+      </button>
+
+      {/* Counter */}
+      <div className="absolute top-5 left-1/2 -translate-x-1/2 text-white/70 text-sm font-sans tracking-wide">
+        {current + 1} / {images.length}
+      </div>
+
+      {/* Prev arrow (desktop) */}
+      {images.length > 1 && (
+        <button
+          onClick={(e) => { e.stopPropagation(); prev(); }}
+          className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 z-10 hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white/80 hover:text-white transition-colors"
+          aria-label="Previous image"
+        >
+          <ChevronLeft className="w-7 h-7" />
+        </button>
+      )}
+
+      {/* Next arrow (desktop) */}
+      {images.length > 1 && (
+        <button
+          onClick={(e) => { e.stopPropagation(); next(); }}
+          className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 z-10 hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white/80 hover:text-white transition-colors"
+          aria-label="Next image"
+        >
+          <ChevronRight className="w-7 h-7" />
+        </button>
+      )}
+
+      {/* Image */}
+      <div
+        className="w-full h-full flex items-center justify-center px-4 md:px-20 py-16"
+        onClick={(e) => e.stopPropagation()}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
+        <img
+          src={images[current]}
+          alt={`Gallery image ${current + 1}`}
+          className="max-w-full max-h-full object-contain select-none"
+          draggable={false}
+        />
+      </div>
+    </div>
+  );
+};
+
 const ProjectDetail = () => {
   const { slug } = useParams();
   const { data: project, isLoading } = useProject(slug);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   if (isLoading) {
     return (
@@ -187,11 +301,22 @@ const ProjectDetail = () => {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {gallery.map((img, i) => (
-                <div key={i} className="rounded-lg overflow-hidden aspect-[4/3]">
-                  <img src={img} alt={`${project.name} gallery image ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
-                </div>
+                <button
+                  key={i}
+                  onClick={() => setLightboxIndex(i)}
+                  className="rounded-lg overflow-hidden aspect-[4/3] cursor-pointer group"
+                >
+                  <img src={img} alt={`${project.name} gallery image ${i + 1}`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+                </button>
               ))}
             </div>
+            {lightboxIndex !== null && (
+              <GalleryLightbox
+                images={gallery}
+                startIndex={lightboxIndex}
+                onClose={() => setLightboxIndex(null)}
+              />
+            )}
           </div>
         )}
 
