@@ -9,7 +9,7 @@ const ProjectsPage = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-muted-foreground font-sans">Loading projects...</p>
+        <p className="text-foreground/80 font-sans">Loading projects...</p>
       </div>
     );
   }
@@ -17,7 +17,7 @@ const ProjectsPage = () => {
   if (!projects || projects.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center pt-20">
-        <p className="text-muted-foreground font-sans">No projects available yet.</p>
+        <p className="text-foreground/80 font-sans">No projects available yet.</p>
       </div>
     );
   }
@@ -46,13 +46,13 @@ const ProjectsPage = () => {
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold leading-[0.95] tracking-tight mb-4">
             {featured.name}
           </h1>
-          <div className="flex items-center gap-2 text-muted-foreground text-sm mb-4">
+          <div className="flex items-center gap-2 text-foreground/80 text-sm mb-4">
             <MapPin className="w-4 h-4 text-primary" />
             <span>{featured.location}</span>
             <span className="mx-2 text-border">|</span>
             <span>{featured.type}</span>
           </div>
-          <p className="text-muted-foreground max-w-xl text-sm leading-relaxed mb-6">{featured.short_description}</p>
+          <p className="text-foreground/80 max-w-xl text-sm leading-relaxed mb-6">{featured.short_description}</p>
           <div className="flex items-center gap-4">
             <p className="text-primary font-serif text-2xl font-bold">{featured.price}</p>
             <Link to={`/projects/${featured.slug}`}>
@@ -74,7 +74,7 @@ const ProjectsPage = () => {
               All <span className="gold-gradient-text">Projects</span>
             </h2>
           </div>
-          <p className="hidden md:block text-muted-foreground text-sm max-w-xs text-right">
+          <p className="hidden md:block text-foreground/80 text-sm max-w-xs text-right">
             Discover premium real estate across India's most coveted locations.
           </p>
         </div>
@@ -120,12 +120,12 @@ const ProjectCardLarge = ({ project }: { project: DbProject }) => (
         <h3 className="text-xl md:text-2xl font-serif font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
           {project.name}
         </h3>
-        <div className="flex items-center gap-1.5 text-muted-foreground text-sm">
+        <div className="flex items-center gap-1.5 text-foreground/80 text-sm">
           <MapPin className="w-3.5 h-3.5 text-primary" />
           <span>{project.location}</span>
         </div>
         {project.rera_number && (
-          <p className="text-[10px] tracking-wide font-sans text-muted-foreground/60 mt-1">RERA: {project.rera_number}</p>
+          <p className="text-[10px] tracking-wide font-sans text-foreground/80/60 mt-1">RERA: {project.rera_number}</p>
         )}
       </div>
     </div>
@@ -152,16 +152,16 @@ const ProjectCardCompact = ({ project }: { project: DbProject }) => (
         <h3 className="text-lg font-serif font-bold text-foreground group-hover:text-primary transition-colors">
           {project.name}
         </h3>
-        <div className="flex items-center gap-1.5 text-muted-foreground text-xs">
+        <div className="flex items-center gap-1.5 text-foreground/80 text-xs">
           <MapPin className="w-3 h-3 text-primary" />
           <span>{project.location}</span>
         </div>
         {project.rera_number && (
-          <p className="text-[10px] tracking-wide font-sans text-muted-foreground/60">RERA: {project.rera_number}</p>
+          <p className="text-[10px] tracking-wide font-sans text-foreground/80/60">RERA: {project.rera_number}</p>
         )}
         <div className="flex items-center justify-between pt-1">
           <p className="text-primary font-serif text-lg font-bold">{project.price}</p>
-          <span className="text-muted-foreground text-xs tracking-wide uppercase group-hover:text-primary transition-colors flex items-center gap-1">
+          <span className="text-foreground/80 text-xs tracking-wide uppercase group-hover:text-primary transition-colors flex items-center gap-1">
             View
             <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
           </span>
