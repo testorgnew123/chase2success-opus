@@ -141,25 +141,70 @@ export const AMENITIES_LIST: AmenityDef[] = [
   { name: "Large Windows", icon: Sun, category: "interior" },
   { name: "Walk-in Closet", icon: Shirt, category: "interior" },
 
-  // Riviera-specific amenities
-  { name: "Skywalk", icon: Globe, category: "lifestyle" },
+  // Project-specific amenities
+
+  // Security
+  { name: "24-Hour Security", icon: ShieldCheck, category: "security" },
+  { name: "Multilevel Security with CCTV", icon: ShieldCheck, category: "security" },
+  { name: "Earthquake Resistance", icon: Shield, category: "security" },
+  { name: "Fire Safety", icon: Flame, category: "security" },
+
+  // Recreation
+  { name: "Multipurpose Hall with Party Lawn", icon: Music, category: "recreation" },
+  { name: "Indoor Games - Pool Table TT Chess Carrom", icon: Gamepad2, category: "recreation" },
+  { name: "Gaming Zone", icon: Gamepad2, category: "recreation" },
+  { name: "Gaming Zone & Bowling Alley", icon: Gamepad2, category: "recreation" },
+  { name: "Kids Gaming Zone", icon: Baby, category: "recreation" },
+  { name: "4-Screen Multiplex", icon: Theater, category: "recreation" },
+
+  // Wellness
   { name: "AC Gymnasium", icon: Dumbbell, category: "wellness" },
+  { name: "Gym & Indoor Games", icon: Dumbbell, category: "wellness" },
   { name: "Yoga Room & Yoga Deck", icon: Sparkles, category: "wellness" },
   { name: "Steam & Sauna Bath", icon: Droplets, category: "wellness" },
   { name: "Massage Facility", icon: Heart, category: "wellness" },
-  { name: "Multipurpose Hall with Party Lawn", icon: Music, category: "recreation" },
-  { name: "Indoor Games - Pool Table TT Chess Carrom", icon: Gamepad2, category: "recreation" },
-  { name: "Water Body & Fountain", icon: Droplets, category: "nature" },
+
+  // Lifestyle
+  { name: "Concierge", icon: BriefcaseBusiness, category: "lifestyle" },
+  { name: "Skywalk", icon: Globe, category: "lifestyle" },
   { name: "Reception Lobby (Air-Conditioned)", icon: Building2, category: "lifestyle" },
-  { name: "Kids Gaming Zone", icon: Baby, category: "recreation" },
   { name: "Rooftop Food Court", icon: UtensilsCrossed, category: "lifestyle" },
+  { name: "Food Court", icon: UtensilsCrossed, category: "lifestyle" },
+  { name: "Food Court & Lounge", icon: UtensilsCrossed, category: "lifestyle" },
+  { name: "Rooftop Café", icon: Coffee, category: "lifestyle" },
+  { name: "Clubhouse with Premium Amenities", icon: Home, category: "lifestyle" },
+  { name: "Multifunctional Rooftop Terrace", icon: Eye, category: "lifestyle" },
+  { name: "Retail Kiosks", icon: Store, category: "lifestyle" },
+
+  // Nature
+  { name: "Water Body & Fountain", icon: Droplets, category: "nature" },
+
+  // Infrastructure
+  { name: "Hi-End Electrical Switches", icon: Zap, category: "infrastructure" },
+  { name: "Dual Metering System", icon: Zap, category: "infrastructure" },
+  { name: "24-Hour Power Backup", icon: Zap, category: "infrastructure" },
+  { name: "Expansive Atrium", icon: Building2, category: "infrastructure" },
+  { name: "High-speed lifts", icon: Building2, category: "infrastructure" },
+  { name: "3 High-Quality Lifts for Studio Apartments", icon: Building2, category: "infrastructure" },
+  { name: "2 Dedicated Lifts for Offices", icon: Building2, category: "infrastructure" },
+  { name: "Escalators from First to Second Floor", icon: Building2, category: "infrastructure" },
+  { name: "Centralized AC (Shopping Floors)", icon: AirVent, category: "infrastructure" },
+  { name: "Hydro Pneumatic Water Supply", icon: Droplets, category: "infrastructure" },
+  { name: "Low Maintenance", icon: Wrench, category: "infrastructure" },
+
+  // Transport
+  { name: "Basement Parking", icon: ParkingCircle, category: "transport" },
+  { name: "2 Basement Parking Levels", icon: ParkingCircle, category: "transport" },
+
+  // Interior
   { name: "Modular Kitchen with Gas Bank", icon: Refrigerator, category: "interior" },
+  { name: "Modular Design", icon: Hammer, category: "interior" },
   { name: "UPVC French Windows", icon: Sun, category: "interior" },
+  { name: "Three-Side Opening", icon: AirVent, category: "interior" },
+  { name: "Private Balconies", icon: Landmark, category: "interior" },
   { name: "Jaquar Premium Sanitary Fittings", icon: Bath, category: "interior" },
   { name: "Premium Vitrified Tiles", icon: Sparkles, category: "interior" },
-  { name: "Hi-End Electrical Switches", icon: Zap, category: "infrastructure" },
   { name: "Provision for AC in all rooms", icon: AirVent, category: "interior" },
-  { name: "Basement Parking", icon: ParkingCircle, category: "transport" },
 ];
 
 // Build a lookup map (case-insensitive) for icon resolution
