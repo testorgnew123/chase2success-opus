@@ -16,6 +16,10 @@ const EnquirySection = ({ projectName }: { projectName?: string }) => {
       toast({ title: "Please fill all required fields", variant: "destructive" });
       return;
     }
+    if (!/^\d{10}$/.test(formData.mobile.replace(/\s/g, ""))) {
+      toast({ title: "Please enter a valid 10-digit mobile number", variant: "destructive" });
+      return;
+    }
     setSubmitting(true);
     try {
       const { error } = await neon.from("enquiries").insert({
@@ -97,8 +101,8 @@ const EnquirySection = ({ projectName }: { projectName?: string }) => {
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs font-sans text-foreground tracking-wide uppercase">Mobile Number *</label>
-                  <Input type="tel" placeholder="Enter your mobile number" value={formData.mobile}
-                    onChange={(e) => setFormData({ ...formData, mobile: e.target.value })} required
+                  <Input type="tel" placeholder="Enter your mobile number" value={formData.mobile} maxLength={10}
+                    onChange={(e) => { const v = e.target.value.replace(/\D/g, ""); setFormData({ ...formData, mobile: v }); }} required
                     className="bg-background border-border text-foreground placeholder:text-foreground/80 focus:border-primary h-12" />
                 </div>
               </div>
