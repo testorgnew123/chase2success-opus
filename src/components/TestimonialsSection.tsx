@@ -43,7 +43,7 @@ const TestimonialsSection = () => {
             </blockquote>
             <div>
               <p className="font-serif font-bold text-foreground">{testimonials[0].name}</p>
-              <p className="text-xs text-muted-foreground font-sans tracking-wide mt-1">
+              <p className="text-xs text-foreground/80 font-sans tracking-wide mt-1">
                 {testimonials[0].role}
               </p>
             </div>
@@ -61,12 +61,12 @@ const TestimonialsSection = () => {
                     <Star key={i} className="w-3 h-3 fill-primary text-primary" />
                   ))}
                 </div>
-                <p className="text-sm text-muted-foreground leading-relaxed italic font-editorial mb-5">
+                <p className="text-sm text-foreground/80 leading-relaxed italic font-editorial mb-5">
                   "{t.content}"
                 </p>
                 <div className="border-t border-border pt-4">
                   <p className="font-serif font-bold text-foreground text-sm">{t.name}</p>
-                  <p className="text-[11px] text-muted-foreground font-sans">{t.role}</p>
+                  <p className="text-[11px] text-foreground/80 font-sans">{t.role}</p>
                 </div>
               </div>
             ))}
@@ -86,7 +86,7 @@ const TestimonialsSection = () => {
             </blockquote>
             <div>
               <p className="font-serif font-bold text-foreground">{testimonials[current].name}</p>
-              <p className="text-xs text-muted-foreground font-sans">{testimonials[current].role}</p>
+              <p className="text-xs text-foreground/80 font-sans">{testimonials[current].role}</p>
             </div>
           </div>
           <div className="flex items-center gap-4 mt-8">

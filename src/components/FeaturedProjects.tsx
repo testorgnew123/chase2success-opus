@@ -9,7 +9,7 @@ const FeaturedProjects = () => {
     return (
       <section id="projects" className="section-padding bg-card/40">
         <div className="max-w-[1440px] mx-auto text-center py-20">
-          <p className="text-muted-foreground font-sans">Loading projects...</p>
+          <p className="text-foreground/80 font-sans">Loading projects...</p>
         </div>
       </section>
     );
@@ -103,12 +103,12 @@ const FeaturedProjects = () => {
                   <h3 className="text-base md:text-lg font-serif font-bold text-foreground group-hover:text-primary transition-colors duration-300 mb-2 leading-tight">
                     {project.name}
                   </h3>
-                  <div className="flex items-center gap-1.5 text-muted-foreground text-xs font-sans mb-1">
+                  <div className="flex items-center gap-1.5 text-foreground/80 text-xs font-sans mb-1">
                     <MapPin className="w-3 h-3 text-primary/50" />
                     <span>{project.location}</span>
                   </div>
                   {project.rera_number && (
-                    <p className="text-[10px] tracking-wide font-sans text-muted-foreground/70 mb-2">RERA: {project.rera_number}</p>
+                    <p className="text-[10px] tracking-wide font-sans text-foreground/70 mb-2">RERA: {project.rera_number}</p>
                   )}
                   <p className="font-editorial text-base text-primary font-semibold">
                     {project.price}

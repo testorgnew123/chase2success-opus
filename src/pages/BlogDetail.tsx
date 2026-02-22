@@ -19,7 +19,7 @@ const BlogDetail = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-muted-foreground font-sans">Loading...</p>
+        <p className="text-foreground/80 font-sans">Loading...</p>
       </div>
     );
   }
@@ -59,7 +59,7 @@ const BlogDetail = () => {
           </div>
         )}
 
-        <div className="flex items-center gap-4 mb-6 text-sm text-muted-foreground font-sans">
+        <div className="flex items-center gap-4 mb-6 text-sm text-foreground/80 font-sans">
           <span className="text-primary uppercase tracking-wider text-xs font-semibold">{post.category}</span>
           {post.published_at && (
             <span className="flex items-center gap-1">
@@ -77,13 +77,13 @@ const BlogDetail = () => {
             [&_h1]:text-2xl [&_h1]:font-serif [&_h1]:font-bold [&_h1]:text-foreground [&_h1]:mb-4 [&_h1]:mt-8
             [&_h2]:text-2xl [&_h2]:font-serif [&_h2]:font-bold [&_h2]:text-foreground [&_h2]:mt-10 [&_h2]:mb-4
             [&_h3]:text-xl [&_h3]:font-serif [&_h3]:font-bold [&_h3]:text-foreground [&_h3]:mt-8 [&_h3]:mb-3
-            [&_p]:text-muted-foreground [&_p]:leading-relaxed [&_p]:mb-4
+            [&_p]:text-foreground/80 [&_p]:leading-relaxed [&_p]:mb-4
             [&_img]:max-w-full [&_img]:rounded-lg [&_img]:my-6
-            [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-4 [&_ul]:text-muted-foreground
-            [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-4 [&_ol]:text-muted-foreground
+            [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-4 [&_ul]:text-foreground/80
+            [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-4 [&_ol]:text-foreground/80
             [&_li]:mb-1
             [&_a]:text-primary [&_a]:underline
-            [&_blockquote]:border-l-4 [&_blockquote]:border-primary/30 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-muted-foreground
+            [&_blockquote]:border-l-4 [&_blockquote]:border-primary/30 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-foreground/80
             [&_code]:bg-muted [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-sm
             [&_pre]:bg-muted [&_pre]:p-4 [&_pre]:rounded-md [&_pre]:overflow-x-auto
             [&_strong]:font-bold [&_strong]:text-foreground [&_em]:italic"

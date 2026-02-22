@@ -17,7 +17,7 @@ const AboutPage = () => {
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold mb-6">
             About <span className="gold-gradient-text">CHASE2SUCCESS</span>
           </h1>
-          <p className="text-muted-foreground max-w-3xl mx-auto font-sans leading-relaxed">
+          <p className="text-foreground/80 max-w-3xl mx-auto font-sans leading-relaxed">
             Founded with a vision to transform how India's discerning investors approach luxury real estate,
             CHASE2SUCCESS has grown into a trusted name synonymous with premium properties, transparent dealings,
             and exceptional returns. Our journey of over a decade has been marked by an unwavering commitment

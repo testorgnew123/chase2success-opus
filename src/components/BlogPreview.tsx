@@ -39,7 +39,7 @@ const BlogPreview = () => {
             )}
             <p className="text-[10px] tracking-[0.25em] uppercase font-sans text-primary/60 mb-3">{featured.category}</p>
             <h3 className="text-xl md:text-2xl font-serif font-bold text-foreground group-hover:text-primary transition-colors mb-3 leading-tight">{featured.title}</h3>
-            <p className="text-sm text-muted-foreground font-sans leading-relaxed max-w-lg line-clamp-2">{featured.excerpt}</p>
+            <p className="text-sm text-foreground/80 font-sans leading-relaxed max-w-lg line-clamp-2">{featured.excerpt}</p>
           </Link>
 
           <div className="lg:col-span-5 flex flex-col divide-y divide-border">
@@ -53,7 +53,7 @@ const BlogPreview = () => {
                 <div className="flex-1">
                   <p className="text-[10px] tracking-[0.25em] uppercase font-sans text-primary/60 mb-2">{post.category}</p>
                   <h3 className="text-sm font-serif font-bold text-foreground group-hover:text-primary transition-colors leading-snug mb-1">{post.title}</h3>
-                  <p className="text-xs text-muted-foreground font-sans line-clamp-2">{post.excerpt}</p>
+                  <p className="text-xs text-foreground/80 font-sans line-clamp-2">{post.excerpt}</p>
                 </div>
               </Link>
             ))}

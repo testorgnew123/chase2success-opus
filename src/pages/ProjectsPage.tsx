@@ -40,19 +40,19 @@ const ProjectsPage = () => {
           className="absolute inset-0 w-full h-full object-cover"
           loading="eager"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10" />
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pb-16 md:pb-20">
-          <p className="text-primary/80 text-[11px] tracking-[0.4em] uppercase mb-4 font-sans">Featured Project</p>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold leading-[0.95] tracking-tight mb-4">
+          <p className="text-primary text-[11px] tracking-[0.4em] uppercase mb-4 font-sans">Featured Project</p>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold leading-[0.95] tracking-tight mb-4 text-white">
             {featured.name}
           </h1>
-          <div className="flex items-center gap-2 text-foreground/80 text-sm mb-4">
+          <div className="flex items-center gap-2 text-white/80 text-sm mb-4">
             <MapPin className="w-4 h-4 text-primary" />
             <span>{featured.location}</span>
-            <span className="mx-2 text-border">|</span>
+            <span className="mx-2 text-white/40">|</span>
             <span>{featured.type}</span>
           </div>
-          <p className="text-foreground/80 max-w-xl text-sm leading-relaxed mb-6">{featured.short_description}</p>
+          <p className="text-white/80 max-w-xl text-sm leading-relaxed mb-6">{featured.short_description}</p>
           <div className="flex items-center gap-4">
             <p className="text-primary font-serif text-2xl font-bold">{featured.price}</p>
             <Link to={`/projects/${featured.slug}`}>
@@ -125,7 +125,7 @@ const ProjectCardLarge = ({ project }: { project: DbProject }) => (
           <span>{project.location}</span>
         </div>
         {project.rera_number && (
-          <p className="text-[10px] tracking-wide font-sans text-foreground/80/60 mt-1">RERA: {project.rera_number}</p>
+          <p className="text-[10px] tracking-wide font-sans text-foreground/60 mt-1">RERA: {project.rera_number}</p>
         )}
       </div>
     </div>
@@ -157,7 +157,7 @@ const ProjectCardCompact = ({ project }: { project: DbProject }) => (
           <span>{project.location}</span>
         </div>
         {project.rera_number && (
-          <p className="text-[10px] tracking-wide font-sans text-foreground/80/60">RERA: {project.rera_number}</p>
+          <p className="text-[10px] tracking-wide font-sans text-foreground/60">RERA: {project.rera_number}</p>
         )}
         <div className="flex items-center justify-between pt-1">
           <p className="text-primary font-serif text-lg font-bold">{project.price}</p>

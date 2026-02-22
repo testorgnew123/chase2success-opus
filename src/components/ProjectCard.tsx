@@ -28,7 +28,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
           <span>{project.location}</span>
         </div>
         {project.rera_number && (
-          <p className="text-[10px] tracking-wide font-sans text-foreground/80/70">RERA: {project.rera_number}</p>
+          <p className="text-[10px] tracking-wide font-sans text-foreground/70">RERA: {project.rera_number}</p>
         )}
         <p className="text-foreground/80 text-sm leading-relaxed">{project.shortDescription}</p>
         <p className="text-primary font-serif text-xl font-bold">{project.price}</p>

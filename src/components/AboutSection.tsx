@@ -71,11 +71,11 @@ const AboutSection = () => {
 
           {/* Right column — body text */}
           <div className="lg:col-span-7 lg:pt-6">
-            <p className="font-editorial text-lg md:text-xl text-muted-foreground leading-[1.7] mb-6">
+            <p className="font-editorial text-lg md:text-xl text-foreground/80 leading-[1.7] mb-6">
               CHASE2SUCCESS is a premier luxury real estate advisory firm dedicated to connecting
               discerning investors with the finest properties across India.
             </p>
-            <p className="text-sm text-muted-foreground font-sans leading-relaxed">
+            <p className="text-sm text-foreground/80 font-sans leading-relaxed">
               With over a decade of expertise, we combine market intelligence, legal transparency,
               and personalized consultation to deliver unmatched investment outcomes. Our commitment
               to trust and excellence has made us the preferred partner for high-net-worth
@@ -90,7 +90,7 @@ const AboutSection = () => {
             {stats.map((stat) => (
               <div key={stat.label} className="space-y-3">
                 <Counter target={stat.value} suffix={stat.suffix} />
-                <p className="text-xs text-muted-foreground font-sans tracking-[0.2em] uppercase">
+                <p className="text-xs text-foreground/80 font-sans tracking-[0.2em] uppercase">
                   {stat.label}
                 </p>
               </div>

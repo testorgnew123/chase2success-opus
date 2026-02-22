@@ -54,7 +54,7 @@ const EnquirySection = () => {
                 Investment Journey
               </em>
             </h2>
-            <p className="font-editorial text-lg text-muted-foreground leading-relaxed mb-10">
+            <p className="font-editorial text-lg text-foreground/80 leading-relaxed mb-10">
               Take the first step towards owning a premium property. Our expert advisors will
               respond within 24 hours with personalized recommendations.
             </p>
@@ -79,13 +79,13 @@ const EnquirySection = () => {
                   <label className="text-xs font-sans text-foreground tracking-wide uppercase">Full Name *</label>
                   <Input placeholder="Enter your full name" value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })} required
-                    className="bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-primary h-12" />
+                    className="bg-background border-border text-foreground placeholder:text-foreground/80 focus:border-primary h-12" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs font-sans text-foreground tracking-wide uppercase">Email *</label>
                   <Input type="email" placeholder="Enter your email" value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })} required
-                    className="bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-primary h-12" />
+                    className="bg-background border-border text-foreground placeholder:text-foreground/80 focus:border-primary h-12" />
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -93,7 +93,7 @@ const EnquirySection = () => {
                   <label className="text-xs font-sans text-foreground tracking-wide uppercase">Mobile Number *</label>
                   <Input type="tel" placeholder="Enter your mobile number" value={formData.mobile}
                     onChange={(e) => setFormData({ ...formData, mobile: e.target.value })} required
-                    className="bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-primary h-12" />
+                    className="bg-background border-border text-foreground placeholder:text-foreground/80 focus:border-primary h-12" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs font-sans text-foreground tracking-wide uppercase">Interested Project</label>
@@ -110,7 +110,7 @@ const EnquirySection = () => {
                 <label className="text-xs font-sans text-foreground tracking-wide uppercase">Message</label>
                 <Textarea placeholder="Tell us about your requirements..." value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })} rows={3}
-                  className="bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-primary" />
+                  className="bg-background border-border text-foreground placeholder:text-foreground/80 focus:border-primary" />
               </div>
               <Button type="submit" disabled={submitting}
                 className="w-full gold-gradient text-primary-foreground font-sans font-semibold py-6 text-sm tracking-wide hover:opacity-90 transition-opacity group">

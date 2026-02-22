@@ -16,7 +16,7 @@ const ProjectDetail = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-muted-foreground font-sans">Loading...</p>
+        <p className="text-foreground/80 font-sans">Loading...</p>
       </div>
     );
   }
@@ -66,7 +66,7 @@ const ProjectDetail = () => {
                 <span className="gold-gradient text-primary-foreground text-[10px] font-semibold px-3 py-1.5 rounded-sm uppercase tracking-widest">
                   {project.status}
                 </span>
-                <span className="text-[10px] tracking-[0.3em] uppercase font-sans text-muted-foreground">
+                <span className="text-[10px] tracking-[0.3em] uppercase font-sans text-foreground/80">
                   {project.type}
                 </span>
               </div>
@@ -90,7 +90,7 @@ const ProjectDetail = () => {
                 <span className="font-sans text-sm">{project.location}</span>
               </div>
               {project.rera_number && (
-                <p className="text-xs tracking-wide font-sans text-muted-foreground/70 mb-4">RERA No: {project.rera_number}</p>
+                <p className="text-xs tracking-wide font-sans text-foreground/70 mb-4">RERA No: {project.rera_number}</p>
               )}
               <p className="font-editorial text-base text-foreground/80 leading-relaxed max-w-sm mb-8 line-clamp-3">
                 {project.short_description}
@@ -114,21 +114,21 @@ const ProjectDetail = () => {
                   <p className="text-xl lg:text-2xl font-serif font-bold text-foreground leading-none mb-1">
                     {project.price.replace('Onwards', '').trim()}
                   </p>
-                  <p className="text-[10px] tracking-[0.2em] uppercase font-sans text-muted-foreground">Onwards</p>
+                  <p className="text-[10px] tracking-[0.2em] uppercase font-sans text-foreground/80">Onwards</p>
                 </div>
                 <div className="w-px h-10 bg-border" />
                 <div>
                   <p className="text-xl lg:text-2xl font-serif font-bold text-foreground leading-none mb-1">
                     {project.area.split('-')[0].trim() || project.area}
                   </p>
-                  <p className="text-[10px] tracking-[0.2em] uppercase font-sans text-muted-foreground">Area</p>
+                  <p className="text-[10px] tracking-[0.2em] uppercase font-sans text-foreground/80">Area</p>
                 </div>
                 <div className="w-px h-10 bg-border" />
                 <div>
                   <p className="text-xl lg:text-2xl font-serif font-bold text-foreground leading-none mb-1">
                     {amenities.length}
                   </p>
-                  <p className="text-[10px] tracking-[0.2em] uppercase font-sans text-muted-foreground">Amenities</p>
+                  <p className="text-[10px] tracking-[0.2em] uppercase font-sans text-foreground/80">Amenities</p>
                 </div>
               </div>
             </div>
@@ -139,7 +139,7 @@ const ProjectDetail = () => {
             <div className="absolute inset-0 bg-gradient-to-l from-transparent to-background/20 hidden lg:block" />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent lg:hidden" />
             <div className="absolute bottom-6 right-6 lg:bottom-10 lg:right-10 bg-background/90 backdrop-blur-sm px-5 py-3 border border-border">
-              <p className="text-[10px] tracking-[0.2em] uppercase font-sans text-muted-foreground mb-1">Category</p>
+              <p className="text-[10px] tracking-[0.2em] uppercase font-sans text-foreground/80 mb-1">Category</p>
               <p className="font-serif font-bold text-foreground text-sm">{project.type}</p>
             </div>
           </div>
@@ -169,7 +169,7 @@ const ProjectDetail = () => {
                   <div key={amenity} className="group relative bg-card border border-border rounded-lg p-5 flex flex-col items-center text-center gap-3 transition-all duration-300 hover:border-primary/40 hover:gold-glow">
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[2px] gold-gradient rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <div className="w-10 h-10 rounded-full border border-border flex items-center justify-center transition-colors duration-300 group-hover:border-primary/50 group-hover:bg-primary/5">
-                      <Icon className="w-4.5 h-4.5 text-muted-foreground transition-colors duration-300 group-hover:text-primary" strokeWidth={1.5} />
+                      <Icon className="w-4.5 h-4.5 text-foreground/80 transition-colors duration-300 group-hover:text-primary" strokeWidth={1.5} />
                     </div>
                     <span className="text-xs font-sans font-medium text-foreground/80 leading-tight tracking-wide">{amenity}</span>
                   </div>
@@ -201,7 +201,7 @@ const ProjectDetail = () => {
             Location <span className="gold-gradient-text">Map</span>
           </h2>
           <div className="rounded-lg border border-border h-64 bg-secondary flex items-center justify-center">
-            <p className="text-muted-foreground font-sans text-sm">Map will be embedded here</p>
+            <p className="text-foreground/80 font-sans text-sm">Map will be embedded here</p>
           </div>
         </div>
       </section>

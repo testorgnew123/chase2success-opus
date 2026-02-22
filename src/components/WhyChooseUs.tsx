@@ -50,7 +50,7 @@ const WhyChooseUs = () => {
             </h2>
           </div>
           <div className="lg:col-span-7 lg:flex lg:items-end">
-            <p className="font-editorial text-lg text-muted-foreground leading-relaxed max-w-lg">
+            <p className="font-editorial text-lg text-foreground/80 leading-relaxed max-w-lg">
               A decade of expertise, market intelligence, and unwavering commitment to your investment success.
             </p>
           </div>
@@ -68,7 +68,7 @@ const WhyChooseUs = () => {
                   <h3 className="text-base font-serif font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
                     {feature.title}
                   </h3>
-                  <p className="text-sm text-muted-foreground font-sans leading-relaxed">
+                  <p className="text-sm text-foreground/80 font-sans leading-relaxed">
                     {feature.description}
                   </p>
                 </div>

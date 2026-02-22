@@ -43,7 +43,7 @@ const ContactSection = () => {
                 Out To Us
               </em>
             </h2>
-            <p className="font-editorial text-lg text-muted-foreground leading-relaxed">
+            <p className="font-editorial text-lg text-foreground/80 leading-relaxed">
               We'd love to hear from you. Get in touch through any of these channels.
             </p>
           </div>
@@ -69,7 +69,7 @@ const ContactSection = () => {
                       <h3 className="font-serif font-bold text-foreground text-sm">{c.title}</h3>
                     </div>
                     {c.lines.map((line, i) => (
-                      <p key={i} className="text-sm text-muted-foreground font-sans leading-relaxed">
+                      <p key={i} className="text-sm text-foreground/80 font-sans leading-relaxed">
                         {line}
                       </p>
                     ))}
@@ -80,7 +80,7 @@ const ContactSection = () => {
 
             {/* Map Placeholder */}
             <div className="mt-8 border border-border h-56 flex items-center justify-center">
-              <p className="text-muted-foreground font-sans text-sm">Map will be embedded here</p>
+              <p className="text-foreground/80 font-sans text-sm">Map will be embedded here</p>
             </div>
           </div>
         </div>
