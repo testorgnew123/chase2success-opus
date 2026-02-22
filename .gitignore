@@ -19,6 +19,8 @@ dist-ssr
 # Database dumps (may contain seed data with old URLs / sensitive info)
 database/
 
+# non required scripts
+scripts/
 # Claude Code local settings
 .claude/
 
