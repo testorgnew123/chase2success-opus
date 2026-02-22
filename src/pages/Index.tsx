@@ -15,7 +15,7 @@ const Index = () => {
     name: "CHASE2SUCCESS",
     description: "Premium luxury real estate advisory firm offering plots, farmhouses, and luxury residences.",
     url: "https://chase2success.com",
-    telephone: "+919999999999",
+    telephone: "+919872404280",
     address: {
       "@type": "PostalAddress",
       streetAddress: "123 Business Tower, Golf Course Road",

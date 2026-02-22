@@ -9,14 +9,14 @@ const contacts = [
   {
     icon: Phone,
     title: "Call Us",
-    lines: ["+91 99999 99999"],
-    href: "tel:+919999999999",
+    lines: ["+91 9872404280"],
+    href: "tel:+919872404280",
   },
   {
     icon: MessageCircle,
     title: "WhatsApp",
-    lines: ["+91 99999 99999"],
-    href: "https://wa.me/919999999999",
+    lines: ["+91 9872404280"],
+    href: "https://wa.me/919872404280",
   },
   {
     icon: Mail,

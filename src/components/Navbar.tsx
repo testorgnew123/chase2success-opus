@@ -42,7 +42,7 @@ const Navbar = () => {
 
           <div className="hidden lg:flex items-center">
             <a
-              href="tel:+919999999999"
+              href="tel:+919872404280"
               className="group flex items-center gap-2 text-sm font-sans font-medium text-primary border border-primary/30 px-6 py-2.5 hover:bg-primary hover:text-primary-foreground transition-all duration-300"
             >
               Get in Touch
@@ -81,7 +81,7 @@ const Navbar = () => {
             ))}
             <div className="pt-6">
               <a
-                href="tel:+919999999999"
+                href="tel:+919872404280"
                 className="inline-flex items-center gap-2 text-sm font-sans font-medium text-primary border border-primary/30 px-6 py-3 hover:bg-primary hover:text-primary-foreground transition-all"
               >
                 Get in Touch

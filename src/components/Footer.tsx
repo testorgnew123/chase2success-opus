@@ -71,7 +71,7 @@ const Footer = () => {
             <div className="space-y-3 text-sm text-foreground/80 font-sans">
               <p>123 Business Tower, Golf Course Road</p>
               <p>Gurugram, Haryana 122002</p>
-              <a href="tel:+919999999999" className="hover:text-primary transition-colors block">+91 99999 99999</a>
+              <a href="tel:+919872404280" className="hover:text-primary transition-colors block">+91 9872404280</a>
               <a href="mailto:info@chase2success.com" className="hover:text-primary transition-colors block">info@chase2success.com</a>
               <p>RERA Reg. No: RAJ/P/2019/942</p>
             </div>

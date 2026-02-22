@@ -59,12 +59,12 @@ const EnquirySection = () => {
               respond within 24 hours with personalized recommendations.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
-              <a href="https://wa.me/919999999999" target="_blank" rel="noopener noreferrer"
+              <a href="https://wa.me/919872404280" target="_blank" rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-sm font-sans font-medium border border-green-600/30 text-green-600 px-5 py-2.5 hover:bg-green-600 hover:text-white transition-all">
                 <MessageCircle className="w-4 h-4" />
                 WhatsApp Us
               </a>
-              <a href="tel:+919999999999"
+              <a href="tel:+919872404280"
                 className="inline-flex items-center gap-2 text-sm font-sans font-medium border border-primary/30 text-primary px-5 py-2.5 hover:bg-primary hover:text-primary-foreground transition-all">
                 <Phone className="w-4 h-4" />
                 Call Now
