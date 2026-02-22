@@ -29,7 +29,7 @@ const HeroSection = () => {
 
             <div className="editorial-divider mb-6" />
 
-            <p className="font-editorial text-base md:text-lg text-muted-foreground leading-relaxed max-w-sm mb-10">
+            <p className="font-editorial text-base md:text-lg text-foreground/80 leading-relaxed max-w-sm mb-10">
               Premium plots, farmhouses & luxury residences — curated for India's most discerning investors.
             </p>
 
