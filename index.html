@@ -15,9 +15,8 @@
 
     <!-- Preconnect to external origins for faster resource loading -->
     <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
-    <!-- Neon preconnects without crossorigin — SDK uses credentialed fetch, not anonymous CORS -->
-    <link rel="preconnect" href="https://ep-tiny-fire-a7x2sfgc.neonauth.ap-southeast-2.aws.neon.tech" />
-    <link rel="preconnect" href="https://ep-tiny-fire-a7x2sfgc.apirest.ap-southeast-2.aws.neon.tech" />
+    <link rel="preconnect" href="https://ep-tiny-fire-a7x2sfgc.neonauth.ap-southeast-2.aws.neon.tech" crossorigin />
+    <link rel="preconnect" href="https://ep-tiny-fire-a7x2sfgc.apirest.ap-southeast-2.aws.neon.tech" crossorigin />
 
     <!-- Inline critical CSS for instant FCP — covers body, navbar, and hero shell -->
     <style>

@@ -12,15 +12,29 @@ import Index from "./pages/Index";
 const Footer = lazy(() => import("./components/Footer"));
 const WhatsAppFloat = lazy(() => import("./components/WhatsAppFloat"));
 
-// Start the projects data fetch in parallel with the JS chunk download.
-// This eliminates the waterfall: instead of JS → mount → query → image,
-// the query fires alongside the chunk load, and the LCP image is preloaded
-// as soon as data arrives — potentially saving ~2-3 s on LCP.
+// ── QueryClient must be defined early so the module-level prefetch can use it ──
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,   // 5 minutes — avoid refetching on every mount
+      gcTime: 10 * 60 * 1000,     // 10 minutes cache
+    },
+  },
+});
+
+// ── Early data prefetch for /projects ──────────────────────────────────────────
+// On direct navigation to /projects, start the neon chunk download + data query
+// IMMEDIATELY during module evaluation — before React even initializes.
+// This runs in parallel with the ProjectsPage chunk download and eliminates the
+// waterfall: JS → mount → query → image becomes JS + query (parallel).
+const _isProjectsPage = /^\/projects\/?$/.test(window.location.pathname);
+const _neonReady = _isProjectsPage ? import("@/lib/neon-public") : null;
+
 function prefetchProjectsData() {
   queryClient.prefetchQuery({
     queryKey: ["projects"],
     queryFn: async () => {
-      const { neon } = await import("@/lib/neon-public");
+      const { neon } = await (_neonReady || import("@/lib/neon-public"));
       const { data, error } = await neon
         .from("projects")
         .select("*")
@@ -51,11 +65,13 @@ function prefetchProjectsData() {
   });
 }
 
-// Lazy-load non-critical routes for faster initial page load.
-// Each import() factory is stored so it can be called early on hover (prefetch).
+// Fire immediately for direct /projects navigation (module-level, before React)
+if (_isProjectsPage) prefetchProjectsData();
+
+// ── Route lazy-loading ─────────────────────────────────────────────────────────
 const routeImports = {
   projects: () => {
-    prefetchProjectsData();
+    prefetchProjectsData(); // no-op if data already cached from module-level call
     return import("./pages/ProjectsPage");
   },
   projectDetail: () => import("./pages/ProjectDetail"),
@@ -97,15 +113,6 @@ const AdminProjects = lazy(() => import("./pages/admin/AdminProjects"));
 const AdminBlogs = lazy(() => import("./pages/admin/AdminBlogs"));
 const AdminEnquiries = lazy(() => import("./pages/admin/AdminEnquiries"));
 const AdminTestimonials = lazy(() => import("./pages/admin/AdminTestimonials"));
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000,   // 5 minutes — avoid refetching on every mount
-      gcTime: 10 * 60 * 1000,     // 10 minutes cache
-    },
-  },
-});
 
 // Scroll to top on route change
 const ScrollToTop = () => {
