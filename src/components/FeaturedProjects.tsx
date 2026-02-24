@@ -68,7 +68,7 @@ const FeaturedProjects = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/10 to-transparent" />
               <div className="absolute top-6 left-6">
                 <span className={`${getStatusBadgeClass(featured.display_status)} text-[10px] font-sans font-semibold px-4 py-1.5 tracking-[0.2em] uppercase`}>
-                  {featured.display_status}
+                  {featured.display_status || featured.type}
                 </span>
               </div>
               <div className="absolute bottom-0 left-0 right-0 p-8 lg:p-10">

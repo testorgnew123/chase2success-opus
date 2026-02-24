@@ -5,8 +5,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function getStatusBadgeClass(status: string): string {
-  switch (status.toLowerCase()) {
+export function getStatusBadgeClass(status: string | undefined | null): string {
+  switch ((status ?? "").toLowerCase()) {
     case "sold out":
       return "status-badge-sold-out";
     case "booking":

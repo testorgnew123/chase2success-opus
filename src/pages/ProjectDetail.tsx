@@ -183,7 +183,7 @@ const ProjectDetail = () => {
               </Link>
               <div className="flex items-center gap-3 mb-4">
                 <span className={`${getStatusBadgeClass(project.display_status)} text-[10px] font-semibold px-3 py-1.5 rounded-sm uppercase tracking-widest`}>
-                  {project.display_status}
+                  {project.display_status || project.type}
                 </span>
                 <span className="text-[10px] tracking-[0.3em] uppercase font-sans text-foreground/80">
                   {project.type}
