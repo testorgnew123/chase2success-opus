@@ -1,4 +1,4 @@
-import { useState, useEffect, memo } from "react";
+import { useState, useEffect, useRef, useCallback, memo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { prefetchRoute } from "@/App";
@@ -15,7 +15,21 @@ const navLinks = [
 
 const Navbar = memo(() => {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolledDown, setScrolledDown] = useState(false);
+  const lastScrollY = useRef(0);
   const location = useLocation();
+
+  // Hide logo on mobile when scrolling down
+  const handleScroll = useCallback(() => {
+    const currentY = window.scrollY;
+    setScrolledDown(currentY > 20 && currentY > lastScrollY.current);
+    lastScrollY.current = currentY;
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -26,7 +40,7 @@ const Navbar = memo(() => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl">
       <div className="max-w-[1440px] mx-auto pr-2 sm:pr-10 lg:pr-16">
         <div className="flex items-center justify-between h-20 lg:h-24">
-          <Link to="/" className="flex items-center h-20 lg:h-24">
+          <Link to="/" className={`flex items-center h-20 lg:h-24 transition-all duration-300 ${scrolledDown ? "max-lg:opacity-0 max-lg:w-0 max-lg:overflow-hidden" : "opacity-100"}`}>
             <picture>
               <source srcSet={logoWebp} type="image/webp" />
               <img src={logoPng} alt="CHASE2SUCCESS Logo" className="h-20 lg:h-24 w-auto object-contain" width={561} height={200} fetchPriority="high" decoding="async" />

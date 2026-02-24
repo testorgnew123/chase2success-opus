@@ -5,6 +5,7 @@ import { useProjects, type DbProject } from "@/hooks/useProjects";
 import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { optimizeCloudinaryUrl } from "@/lib/cloudinary";
+import { getStatusBadgeClass } from "@/lib/utils";
 
 const ProjectCardLarge = memo(({ project }: { project: DbProject }) => (
   <Link to={`/projects/${project.slug}`} className="group block">
@@ -18,8 +19,8 @@ const ProjectCardLarge = memo(({ project }: { project: DbProject }) => (
       />
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
       <div className="absolute top-5 left-5">
-        <span className="gold-gradient text-primary-foreground text-[10px] font-semibold px-3 py-1.5 rounded-sm uppercase tracking-widest">
-          {project.status}
+        <span className={`${getStatusBadgeClass(project.display_status)} text-[10px] font-semibold px-3 py-1.5 rounded-sm uppercase tracking-widest`}>
+          {project.display_status}
         </span>
       </div>
       <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
@@ -52,8 +53,8 @@ const ProjectCardCompact = memo(({ project }: { project: DbProject }) => (
           decoding="async"
         />
         <div className="absolute top-4 left-4">
-          <span className="gold-gradient text-primary-foreground text-[10px] font-semibold px-3 py-1 rounded-sm uppercase tracking-widest">
-            {project.status}
+          <span className={`${getStatusBadgeClass(project.display_status)} text-[10px] font-semibold px-3 py-1 rounded-sm uppercase tracking-widest`}>
+            {project.display_status}
           </span>
         </div>
       </div>

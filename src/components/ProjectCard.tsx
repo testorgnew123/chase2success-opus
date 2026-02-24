@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { getStatusBadgeClass } from "@/lib/utils";
 import type { Project } from "@/data/projects";
 
 const ProjectCard = ({ project }: { project: Project }) => {
@@ -15,7 +16,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
           decoding="async"
         />
         <div className="absolute top-4 left-4">
-          <span className="gold-gradient text-primary-foreground text-xs font-semibold px-3 py-1 rounded-sm uppercase tracking-wider">
+          <span className={`${getStatusBadgeClass(project.status)} text-xs font-semibold px-3 py-1 rounded-sm uppercase tracking-wider`}>
             {project.status}
           </span>
         </div>

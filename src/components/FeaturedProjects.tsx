@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, MapPin } from "lucide-react";
 import { useProjects } from "@/hooks/useProjects";
 import { optimizeCloudinaryUrl } from "@/lib/cloudinary";
+import { getStatusBadgeClass } from "@/lib/utils";
 
 const FeaturedProjects = () => {
   const { data: projects, isLoading } = useProjects();
@@ -66,8 +67,8 @@ const FeaturedProjects = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/10 to-transparent" />
               <div className="absolute top-6 left-6">
-                <span className="gold-gradient text-primary-foreground text-[10px] font-sans font-semibold px-4 py-1.5 tracking-[0.2em] uppercase">
-                  {featured.status}
+                <span className={`${getStatusBadgeClass(featured.display_status)} text-[10px] font-sans font-semibold px-4 py-1.5 tracking-[0.2em] uppercase`}>
+                  {featured.display_status}
                 </span>
               </div>
               <div className="absolute bottom-0 left-0 right-0 p-8 lg:p-10">

@@ -10,6 +10,7 @@ import SEO from "@/components/SEO";
 import EnquirySection from "@/components/EnquirySection";
 import { getAmenityIcon } from "@/data/amenities";
 import { optimizeCloudinaryUrl } from "@/lib/cloudinary";
+import { getStatusBadgeClass } from "@/lib/utils";
 
 /* ─── Fullscreen Gallery Lightbox ─── */
 const GalleryLightbox = ({
@@ -181,8 +182,8 @@ const ProjectDetail = () => {
                 <ArrowLeft className="w-3.5 h-3.5" /> Back to Projects
               </Link>
               <div className="flex items-center gap-3 mb-4">
-                <span className="gold-gradient text-primary-foreground text-[10px] font-semibold px-3 py-1.5 rounded-sm uppercase tracking-widest">
-                  {project.status}
+                <span className={`${getStatusBadgeClass(project.display_status)} text-[10px] font-semibold px-3 py-1.5 rounded-sm uppercase tracking-widest`}>
+                  {project.display_status}
                 </span>
                 <span className="text-[10px] tracking-[0.3em] uppercase font-sans text-foreground/80">
                   {project.type}
