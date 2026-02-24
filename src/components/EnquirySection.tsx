@@ -3,7 +3,7 @@ import { ArrowRight, MessageCircle, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { neon } from "@/lib/neon";
+import { neon } from "@/lib/neon-public";
 import { toast } from "@/hooks/use-toast";
 
 const EnquirySection = ({ projectName }: { projectName?: string }) => {

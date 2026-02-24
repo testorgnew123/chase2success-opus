@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { neon } from "@/lib/neon";
+import { neon } from "@/lib/neon-public";
 import type { Project } from "@/lib/db-types";
 
 export type DbProject = Project;

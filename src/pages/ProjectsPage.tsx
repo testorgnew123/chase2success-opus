@@ -120,7 +120,9 @@ const ProjectsPage = () => {
       {/* Hero / Featured Project */}
       <section className="relative h-[70vh] min-h-[500px] flex items-end overflow-hidden">
         <img
-          src={optimizeCloudinaryUrl(featured.image_url, { width: 1440 })}
+          src={optimizeCloudinaryUrl(featured.image_url, { width: 800 })}
+          srcSet={`${optimizeCloudinaryUrl(featured.image_url, { width: 800 })} 800w, ${optimizeCloudinaryUrl(featured.image_url, { width: 1440 })} 1440w`}
+          sizes="100vw"
           alt={`${featured.name} - ${featured.type}`}
           className="absolute inset-0 w-full h-full object-cover"
           loading="eager"

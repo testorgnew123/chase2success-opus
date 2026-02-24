@@ -18,7 +18,7 @@ export function optimizeCloudinaryUrl(
   // Only transform Cloudinary URLs
   if (!url.includes("res.cloudinary.com")) return url;
 
-  const transforms = ["f_auto", "q_auto:good"];
+  const transforms = ["f_auto", "q_auto:eco"];
   if (opts.width) transforms.push(`w_${opts.width}`, "c_limit");
 
   // Insert transforms after /upload/

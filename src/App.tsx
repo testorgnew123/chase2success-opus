@@ -12,10 +12,52 @@ import Index from "./pages/Index";
 const Footer = lazy(() => import("./components/Footer"));
 const WhatsAppFloat = lazy(() => import("./components/WhatsAppFloat"));
 
+// Start the projects data fetch in parallel with the JS chunk download.
+// This eliminates the waterfall: instead of JS → mount → query → image,
+// the query fires alongside the chunk load, and the LCP image is preloaded
+// as soon as data arrives — potentially saving ~2-3 s on LCP.
+function prefetchProjectsData() {
+  queryClient.prefetchQuery({
+    queryKey: ["projects"],
+    queryFn: async () => {
+      const { neon } = await import("@/lib/neon-public");
+      const { data, error } = await neon
+        .from("projects")
+        .select("*")
+        .eq("status", "published")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      // Preload the LCP hero image immediately once we know its URL
+      if (data?.length) {
+        const featured =
+          data.find((p: { is_featured?: boolean }) => p.is_featured) || data[0];
+        if (featured?.image_url?.includes("res.cloudinary.com")) {
+          const isMobile = window.innerWidth <= 768;
+          const w = isMobile ? 800 : 1440;
+          const href = featured.image_url.replace(
+            "/upload/",
+            `/upload/f_auto,q_auto:eco,w_${w},c_limit/`
+          );
+          const link = document.createElement("link");
+          link.rel = "preload";
+          link.as = "image";
+          link.href = href;
+          document.head.appendChild(link);
+        }
+      }
+      return data;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
 // Lazy-load non-critical routes for faster initial page load.
 // Each import() factory is stored so it can be called early on hover (prefetch).
 const routeImports = {
-  projects: () => import("./pages/ProjectsPage"),
+  projects: () => {
+    prefetchProjectsData();
+    return import("./pages/ProjectsPage");
+  },
   projectDetail: () => import("./pages/ProjectDetail"),
   blog: () => import("./pages/BlogPage"),
   blogDetail: () => import("./pages/BlogDetail"),
@@ -82,7 +124,7 @@ const PageTracker = () => {
     if (location.pathname.startsWith("/admin")) return;
     const schedule = window.requestIdleCallback || ((cb: () => void) => setTimeout(cb, 1000));
     const id = schedule(() => {
-      import("@/lib/neon").then(({ neon }) => {
+      import("@/lib/neon-public").then(({ neon }) => {
         neon.from("page_visits").insert({
           path: location.pathname,
           referrer: document.referrer || null,

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { neon } from "@/lib/neon";
+import { neon } from "@/lib/neon-public";
 import type { Testimonial } from "@/lib/db-types";
 
 export type DbTestimonial = Testimonial;
