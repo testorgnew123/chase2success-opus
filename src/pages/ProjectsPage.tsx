@@ -1,11 +1,98 @@
+import { useMemo, memo } from "react";
 import { Link } from "react-router-dom";
 import { MapPin, ArrowRight } from "lucide-react";
 import { useProjects, type DbProject } from "@/hooks/useProjects";
 import SEO from "@/components/SEO";
+import { Button } from "@/components/ui/button";
 import { optimizeCloudinaryUrl } from "@/lib/cloudinary";
+
+const ProjectCardLarge = memo(({ project }: { project: DbProject }) => (
+  <Link to={`/projects/${project.slug}`} className="group block">
+    <div className="relative overflow-hidden rounded-sm aspect-[3/4] md:aspect-[4/5]">
+      <img
+        src={optimizeCloudinaryUrl(project.image_url, { width: 700 })}
+        alt={`${project.name} - ${project.type}`}
+        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        loading="lazy"
+        decoding="async"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+      <div className="absolute top-5 left-5">
+        <span className="gold-gradient text-primary-foreground text-[10px] font-semibold px-3 py-1.5 rounded-sm uppercase tracking-widest">
+          {project.status}
+        </span>
+      </div>
+      <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
+        <p className="text-primary font-serif text-xl font-bold mb-2">{project.price}</p>
+        <h3 className="text-xl md:text-2xl font-serif font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
+          {project.name}
+        </h3>
+        <div className="flex items-center gap-1.5 text-foreground/80 text-sm">
+          <MapPin className="w-3.5 h-3.5 text-primary" />
+          <span>{project.location}</span>
+        </div>
+        {project.rera_number && (
+          <p className="text-[10px] tracking-wide font-sans text-foreground/60 mt-1">RERA: {project.rera_number}</p>
+        )}
+      </div>
+    </div>
+  </Link>
+));
+ProjectCardLarge.displayName = "ProjectCardLarge";
+
+const ProjectCardCompact = memo(({ project }: { project: DbProject }) => (
+  <Link to={`/projects/${project.slug}`} className="group block">
+    <div className="overflow-hidden rounded-sm">
+      <div className="relative aspect-[4/3] overflow-hidden">
+        <img
+          src={optimizeCloudinaryUrl(project.image_url, { width: 500 })}
+          alt={`${project.name} - ${project.type}`}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          loading="lazy"
+          decoding="async"
+        />
+        <div className="absolute top-4 left-4">
+          <span className="gold-gradient text-primary-foreground text-[10px] font-semibold px-3 py-1 rounded-sm uppercase tracking-widest">
+            {project.status}
+          </span>
+        </div>
+      </div>
+      <div className="pt-5 space-y-2">
+        <h3 className="text-lg font-serif font-bold text-foreground group-hover:text-primary transition-colors">
+          {project.name}
+        </h3>
+        <div className="flex items-center gap-1.5 text-foreground/80 text-xs">
+          <MapPin className="w-3 h-3 text-primary" />
+          <span>{project.location}</span>
+        </div>
+        {project.rera_number && (
+          <p className="text-[10px] tracking-wide font-sans text-foreground/60">RERA: {project.rera_number}</p>
+        )}
+        <div className="flex items-center justify-between pt-1">
+          <p className="text-primary font-serif text-lg font-bold">{project.price}</p>
+          <span className="text-foreground/80 text-xs tracking-wide uppercase group-hover:text-primary transition-colors flex items-center gap-1">
+            View
+            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
+          </span>
+        </div>
+      </div>
+    </div>
+  </Link>
+));
+ProjectCardCompact.displayName = "ProjectCardCompact";
 
 const ProjectsPage = () => {
   const { data: projects, isLoading } = useProjects();
+
+  const { featured, rest } = useMemo(() => {
+    if (!projects || projects.length === 0) return { featured: null, rest: [] };
+    const sorted = [...projects].sort((a, b) => {
+      if (a.is_featured && !b.is_featured) return -1;
+      if (!a.is_featured && b.is_featured) return 1;
+      return 0;
+    });
+    return { featured: sorted[0], rest: sorted.slice(1) };
+  }, [projects]);
 
   if (isLoading) {
     return (
@@ -15,23 +102,13 @@ const ProjectsPage = () => {
     );
   }
 
-  if (!projects || projects.length === 0) {
+  if (!featured) {
     return (
       <div className="min-h-screen flex items-center justify-center pt-20">
         <p className="text-foreground/80 font-sans">No projects available yet.</p>
       </div>
     );
   }
-
-  // Prioritize featured projects for the hero section
-  const sorted = [...projects].sort((a, b) => {
-    if (a.is_featured && !b.is_featured) return -1;
-    if (!a.is_featured && b.is_featured) return 1;
-    return 0;
-  });
-
-  const featured = sorted[0];
-  const rest = sorted.slice(1);
 
   return (
     <>
@@ -107,80 +184,5 @@ const ProjectsPage = () => {
     </>
   );
 };
-
-import { Button } from "@/components/ui/button";
-
-const ProjectCardLarge = ({ project }: { project: DbProject }) => (
-  <Link to={`/projects/${project.slug}`} className="group block">
-    <div className="relative overflow-hidden rounded-sm aspect-[3/4] md:aspect-[4/5]">
-      <img
-        src={optimizeCloudinaryUrl(project.image_url, { width: 700 })}
-        alt={`${project.name} - ${project.type}`}
-        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-        loading="lazy"
-        decoding="async"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
-      <div className="absolute top-5 left-5">
-        <span className="gold-gradient text-primary-foreground text-[10px] font-semibold px-3 py-1.5 rounded-sm uppercase tracking-widest">
-          {project.status}
-        </span>
-      </div>
-      <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-        <p className="text-primary font-serif text-xl font-bold mb-2">{project.price}</p>
-        <h3 className="text-xl md:text-2xl font-serif font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
-          {project.name}
-        </h3>
-        <div className="flex items-center gap-1.5 text-foreground/80 text-sm">
-          <MapPin className="w-3.5 h-3.5 text-primary" />
-          <span>{project.location}</span>
-        </div>
-        {project.rera_number && (
-          <p className="text-[10px] tracking-wide font-sans text-foreground/60 mt-1">RERA: {project.rera_number}</p>
-        )}
-      </div>
-    </div>
-  </Link>
-);
-
-const ProjectCardCompact = ({ project }: { project: DbProject }) => (
-  <Link to={`/projects/${project.slug}`} className="group block">
-    <div className="overflow-hidden rounded-sm">
-      <div className="relative aspect-[4/3] overflow-hidden">
-        <img
-          src={optimizeCloudinaryUrl(project.image_url, { width: 500 })}
-          alt={`${project.name} - ${project.type}`}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          loading="lazy"
-          decoding="async"
-        />
-        <div className="absolute top-4 left-4">
-          <span className="gold-gradient text-primary-foreground text-[10px] font-semibold px-3 py-1 rounded-sm uppercase tracking-widest">
-            {project.status}
-          </span>
-        </div>
-      </div>
-      <div className="pt-5 space-y-2">
-        <h3 className="text-lg font-serif font-bold text-foreground group-hover:text-primary transition-colors">
-          {project.name}
-        </h3>
-        <div className="flex items-center gap-1.5 text-foreground/80 text-xs">
-          <MapPin className="w-3 h-3 text-primary" />
-          <span>{project.location}</span>
-        </div>
-        {project.rera_number && (
-          <p className="text-[10px] tracking-wide font-sans text-foreground/60">RERA: {project.rera_number}</p>
-        )}
-        <div className="flex items-center justify-between pt-1">
-          <p className="text-primary font-serif text-lg font-bold">{project.price}</p>
-          <span className="text-foreground/80 text-xs tracking-wide uppercase group-hover:text-primary transition-colors flex items-center gap-1">
-            View
-            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
-          </span>
-        </div>
-      </div>
-    </div>
-  </Link>
-);
 
 export default ProjectsPage;

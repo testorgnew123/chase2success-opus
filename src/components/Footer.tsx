@@ -1,9 +1,12 @@
+import { memo } from "react";
 import { Link } from "react-router-dom";
 import { useProjects } from "@/hooks/useProjects";
 import logoWebp from "@/assets/logo.webp";
 import logoPng from "@/assets/logo.png";
 
-const Footer = () => {
+const currentYear = new Date().getFullYear();
+
+const Footer = memo(() => {
   const { data: projects } = useProjects();
 
   return (
@@ -103,7 +106,7 @@ const Footer = () => {
               className="text-primary hover:underline font-medium">
               KyleInnovate
             </a>{" "}
-            | All Rights Reserved © {new Date().getFullYear()}
+            | All Rights Reserved © {currentYear}
           </p>
           <div className="flex items-center gap-3">
             <a href="https://www.linkedin.com/company/kyleinnovate" target="_blank" rel="noopener noreferrer"
@@ -123,6 +126,8 @@ const Footer = () => {
       </div>
     </footer>
   );
-};
+});
+
+Footer.displayName = "Footer";
 
 export default Footer;

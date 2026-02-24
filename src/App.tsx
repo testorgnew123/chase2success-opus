@@ -12,14 +12,41 @@ import Index from "./pages/Index";
 const Footer = lazy(() => import("./components/Footer"));
 const WhatsAppFloat = lazy(() => import("./components/WhatsAppFloat"));
 
-// Lazy-load non-critical routes for faster initial page load
-const ProjectsPage = lazy(() => import("./pages/ProjectsPage"));
-const ProjectDetail = lazy(() => import("./pages/ProjectDetail"));
-const BlogPage = lazy(() => import("./pages/BlogPage"));
-const BlogDetail = lazy(() => import("./pages/BlogDetail"));
-const ContactPage = lazy(() => import("./pages/ContactPage"));
-const AboutPage = lazy(() => import("./pages/AboutPage"));
+// Lazy-load non-critical routes for faster initial page load.
+// Each import() factory is stored so it can be called early on hover (prefetch).
+const routeImports = {
+  projects: () => import("./pages/ProjectsPage"),
+  projectDetail: () => import("./pages/ProjectDetail"),
+  blog: () => import("./pages/BlogPage"),
+  blogDetail: () => import("./pages/BlogDetail"),
+  contact: () => import("./pages/ContactPage"),
+  about: () => import("./pages/AboutPage"),
+} as const;
+
+const ProjectsPage = lazy(routeImports.projects);
+const ProjectDetail = lazy(routeImports.projectDetail);
+const BlogPage = lazy(routeImports.blog);
+const BlogDetail = lazy(routeImports.blogDetail);
+const ContactPage = lazy(routeImports.contact);
+const AboutPage = lazy(routeImports.about);
 const NotFound = lazy(() => import("./pages/NotFound"));
+
+// Map nav paths → prefetch functions. Called on hover for instant navigation.
+const prefetchMap: Record<string, (() => Promise<unknown>) | undefined> = {
+  "/projects": routeImports.projects,
+  "/blog": routeImports.blog,
+  "/contact": routeImports.contact,
+  "/about": routeImports.about,
+};
+
+/**
+ * Prefetch a route's JS chunk on hover so navigation feels instant.
+ * Attach to anchor/Link elements: onMouseEnter={() => prefetchRoute("/projects")}
+ */
+export const prefetchRoute = (path: string) => {
+  const loader = prefetchMap[path];
+  if (loader) loader();
+};
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminLayout = lazy(() => import("./pages/AdminLayout"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));

@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, MapPin } from "lucide-react";
 import { useProjects } from "@/hooks/useProjects";
@@ -5,6 +6,16 @@ import { optimizeCloudinaryUrl } from "@/lib/cloudinary";
 
 const FeaturedProjects = () => {
   const { data: projects, isLoading } = useProjects();
+
+  const { featured, secondary } = useMemo(() => {
+    if (!projects || projects.length === 0) return { featured: null, secondary: [] };
+    const sorted = [...projects].sort((a, b) => {
+      if (a.is_featured && !b.is_featured) return -1;
+      if (!a.is_featured && b.is_featured) return 1;
+      return 0;
+    });
+    return { featured: sorted[0], secondary: sorted.slice(1, 4) };
+  }, [projects]);
 
   if (isLoading) {
     return (
@@ -16,19 +27,7 @@ const FeaturedProjects = () => {
     );
   }
 
-  if (!projects || projects.length === 0) {
-    return null;
-  }
-
-  // Prioritize featured projects, then sort by created_at
-  const sorted = [...projects].sort((a, b) => {
-    if (a.is_featured && !b.is_featured) return -1;
-    if (!a.is_featured && b.is_featured) return 1;
-    return 0;
-  });
-
-  const featured = sorted[0];
-  const secondary = sorted.slice(1, 4);
+  if (!featured) return null;
 
   return (
     <section id="projects" className="section-padding bg-card/40">

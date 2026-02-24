@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import {
   MapPin, ArrowLeft, ArrowRight, Download, X, ChevronLeft, ChevronRight,
   type LucideIcon,
@@ -150,7 +150,7 @@ const ProjectDetail = () => {
   const amenities = project.amenities ?? [];
   const gallery = project.gallery ?? [];
 
-  const jsonLd = {
+  const jsonLd = useMemo(() => ({
     "@context": "https://schema.org",
     "@type": "RealEstateListing",
     name: project.name,
@@ -158,7 +158,7 @@ const ProjectDetail = () => {
     url: `https://chase2success.com/projects/${project.slug}`,
     offers: { "@type": "Offer", price: project.price, priceCurrency: "INR" },
     address: { "@type": "PostalAddress", addressLocality: project.location, addressCountry: "IN" },
-  };
+  }), [project.name, project.description, project.slug, project.price, project.location]);
 
   return (
     <>

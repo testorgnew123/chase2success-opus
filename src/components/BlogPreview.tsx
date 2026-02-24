@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useBlogs } from "@/hooks/useBlogs";
@@ -6,10 +7,12 @@ import { optimizeCloudinaryUrl } from "@/lib/cloudinary";
 const BlogPreview = () => {
   const { data: blogPosts, isLoading } = useBlogs();
 
-  if (isLoading || !blogPosts || blogPosts.length === 0) return null;
+  const { featured, rest } = useMemo(() => {
+    if (!blogPosts || blogPosts.length === 0) return { featured: null, rest: [] };
+    return { featured: blogPosts[0], rest: blogPosts.slice(1, 4) };
+  }, [blogPosts]);
 
-  const featured = blogPosts[0];
-  const rest = blogPosts.slice(1, 4);
+  if (isLoading || !featured) return null;
 
   return (
     <section className="section-padding">

@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect, memo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ArrowUpRight } from "lucide-react";
+import { prefetchRoute } from "@/App";
 import logoWebp from "@/assets/logo.webp";
 import logoPng from "@/assets/logo.png";
 
@@ -12,9 +13,14 @@ const navLinks = [
   { label: "Contact", href: "/contact" },
 ];
 
-const Navbar = () => {
+const Navbar = memo(() => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl">
@@ -33,6 +39,7 @@ const Navbar = () => {
               <Link
                 key={link.href}
                 to={link.href}
+                onMouseEnter={() => prefetchRoute(link.href)}
                 className={`font-editorial text-[15px] tracking-wide transition-colors duration-300 hover:text-primary ${
                   location.pathname === link.href
                     ? "text-primary"
@@ -97,6 +104,8 @@ const Navbar = () => {
       )}
     </nav>
   );
-};
+});
+
+Navbar.displayName = "Navbar";
 
 export default Navbar;
