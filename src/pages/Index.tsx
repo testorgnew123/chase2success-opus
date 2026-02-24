@@ -1,12 +1,15 @@
+import { lazy, Suspense } from "react";
 import SEO from "@/components/SEO";
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
-import FeaturedProjects from "@/components/FeaturedProjects";
-import WhyChooseUs from "@/components/WhyChooseUs";
-import TestimonialsSection from "@/components/TestimonialsSection";
-import BlogPreview from "@/components/BlogPreview";
-import EnquirySection from "@/components/EnquirySection";
-import ContactSection from "@/components/ContactSection";
+
+// Lazy-load below-the-fold sections to reduce initial bundle size
+const FeaturedProjects = lazy(() => import("@/components/FeaturedProjects"));
+const WhyChooseUs = lazy(() => import("@/components/WhyChooseUs"));
+const TestimonialsSection = lazy(() => import("@/components/TestimonialsSection"));
+const BlogPreview = lazy(() => import("@/components/BlogPreview"));
+const EnquirySection = lazy(() => import("@/components/EnquirySection"));
+const ContactSection = lazy(() => import("@/components/ContactSection"));
 
 const Index = () => {
   const jsonLd = {
@@ -35,12 +38,14 @@ const Index = () => {
       />
       <HeroSection />
       <AboutSection />
-      <FeaturedProjects />
-      <WhyChooseUs />
-      <TestimonialsSection />
-      <BlogPreview />
-      <EnquirySection />
-      <ContactSection />
+      <Suspense fallback={null}>
+        <FeaturedProjects />
+        <WhyChooseUs />
+        <TestimonialsSection />
+        <BlogPreview />
+        <EnquirySection />
+        <ContactSection />
+      </Suspense>
     </>
   );
 };

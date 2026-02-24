@@ -1,9 +1,12 @@
+import { useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 
 const AdminLayout = () => {
-  const { user, isAdmin, loading } = useAuth();
+  const { user, isAdmin, loading, initializeAuth } = useAuth();
+
+  useEffect(() => { initializeAuth(); }, []);
 
   if (loading) {
     return (

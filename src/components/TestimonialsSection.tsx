@@ -1,23 +1,37 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { useTestimonials } from "@/hooks/useTestimonials";
 
 const TestimonialsSection = () => {
   const { data: testimonials, isLoading } = useTestimonials();
   const [current, setCurrent] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Only start carousel timer when section is visible on screen
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
-    if (!testimonials || testimonials.length === 0) return;
+    if (!isVisible || !testimonials || testimonials.length === 0) return;
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % testimonials.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, [testimonials]);
+  }, [testimonials, isVisible]);
 
   if (isLoading || !testimonials || testimonials.length === 0) return null;
 
   return (
-    <section className="section-padding bg-card/40">
+    <section ref={sectionRef} className="section-padding bg-card/40">
       <div className="max-w-[1440px] mx-auto">
         {/* Editorial header */}
         <div className="flex items-center gap-4 mb-6">

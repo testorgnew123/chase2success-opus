@@ -3,6 +3,24 @@
   publish = "dist"
   functions = "netlify/functions"
 
+# Cache hashed static assets for 1 year (Vite adds content hashes to filenames)
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Cache images and fonts
+[[headers]]
+  for = "/*.{jpg,jpeg,png,gif,svg,webp,ico,woff,woff2}"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Don't cache index.html so users always get the latest version
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
 [[redirects]]
   from = "/*"
   to = "/index.html"

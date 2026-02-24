@@ -5,6 +5,7 @@ interface AuthContextType {
   user: { id: string; email: string } | null;
   isAdmin: boolean;
   loading: boolean;
+  initializeAuth: () => Promise<void>;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
 }
@@ -21,6 +22,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<{ id: string; email: string } | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
 
   const checkAdminRole = async (userId: string) => {
     try {
@@ -36,48 +38,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // Only initialize auth when explicitly triggered (by admin pages)
+  const initializeAuth = async () => {
+    if (initialized) return;
+    setInitialized(true);
+    try {
+      const session = await neon.auth.getSession();
+      if (session?.data?.user) {
+        const u = session.data.user;
+        setUser({ id: u.id, email: u.email });
+        const admin = await checkAdminRole(u.id);
+        setIsAdmin(admin);
+      }
+    } catch (err) {
+      console.error("Auth init error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // On public pages, mark loading as false immediately (no auth needed)
   useEffect(() => {
-    let isMounted = true;
-
-    const initializeAuth = async () => {
-      try {
-        const session = await neon.auth.getSession();
-        if (!isMounted) return;
-
-        if (session?.data?.user) {
-          const u = session.data.user;
-          setUser({ id: u.id, email: u.email });
-          const admin = await checkAdminRole(u.id);
-          if (isMounted) setIsAdmin(admin);
-        } else {
-          setUser(null);
-          setIsAdmin(false);
-        }
-      } catch (err) {
-        console.error("Auth init error:", err);
-        if (isMounted) {
-          setUser(null);
-          setIsAdmin(false);
-        }
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
-
-    // Safety timeout — never stay loading forever
-    const timeout = setTimeout(() => {
-      if (isMounted && loading) {
-        console.warn("Auth loading timeout — forcing load complete");
-        setLoading(false);
-      }
-    }, 5000);
-
-    initializeAuth();
-
-    return () => {
-      isMounted = false;
-      clearTimeout(timeout);
-    };
+    const isAdminRoute = window.location.pathname.startsWith("/admin");
+    if (isAdminRoute) {
+      initializeAuth();
+    } else {
+      // Public pages don't need auth — resolve immediately
+      setLoading(false);
+    }
   }, []);
 
   const signIn = async (email: string, password: string) => {
@@ -105,7 +93,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAdmin, loading, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, isAdmin, loading, initializeAuth, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );

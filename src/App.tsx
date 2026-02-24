@@ -1,5 +1,4 @@
 import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
@@ -47,18 +46,25 @@ const ScrollToTop = () => {
   return null;
 };
 
-// Track page visits
+// Track page visits — deferred so it doesn't block initial render
 const PageTracker = () => {
   const location = useLocation();
   useEffect(() => {
     if (location.pathname.startsWith("/admin")) return;
-    neon.from("page_visits").insert({
-      path: location.pathname,
-      referrer: document.referrer || null,
-      user_agent: navigator.userAgent || null,
-    }).then(({ error }) => {
-      if (error) console.error("Failed to log visit:", error);
+    // Use requestIdleCallback (or setTimeout fallback) to avoid blocking the main thread
+    const schedule = window.requestIdleCallback || ((cb: () => void) => setTimeout(cb, 1000));
+    const id = schedule(() => {
+      neon.from("page_visits").insert({
+        path: location.pathname,
+        referrer: document.referrer || null,
+        user_agent: navigator.userAgent || null,
+      }).then(({ error }) => {
+        if (error) console.error("Failed to log visit:", error);
+      });
     });
+    return () => {
+      if (window.cancelIdleCallback) window.cancelIdleCallback(id as number);
+    };
   }, [location.pathname]);
   return null;
 };
@@ -96,7 +102,6 @@ const App = () => (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
-        <Sonner />
         <AuthProvider>
           <BrowserRouter>
             <ScrollToTop />

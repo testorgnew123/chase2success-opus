@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -7,7 +7,9 @@ import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 
 const AdminLogin = () => {
-  const { user, isAdmin, loading, signIn } = useAuth();
+  const { user, isAdmin, loading, signIn, initializeAuth } = useAuth();
+
+  useEffect(() => { initializeAuth(); }, []);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
