@@ -128,6 +128,19 @@ const ProjectDetail = () => {
   const { data: project, isLoading } = useProject(slug);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
+  const jsonLd = useMemo(() => {
+    if (!project) return null;
+    return {
+      "@context": "https://schema.org",
+      "@type": "RealEstateListing",
+      name: project.name,
+      description: project.description,
+      url: `https://chase2success.com/projects/${project.slug}`,
+      offers: { "@type": "Offer", price: project.price, priceCurrency: "INR" },
+      address: { "@type": "PostalAddress", addressLocality: project.location, addressCountry: "IN" },
+    };
+  }, [project]);
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -149,16 +162,6 @@ const ProjectDetail = () => {
 
   const amenities = project.amenities ?? [];
   const gallery = project.gallery ?? [];
-
-  const jsonLd = useMemo(() => ({
-    "@context": "https://schema.org",
-    "@type": "RealEstateListing",
-    name: project.name,
-    description: project.description,
-    url: `https://chase2success.com/projects/${project.slug}`,
-    offers: { "@type": "Offer", price: project.price, priceCurrency: "INR" },
-    address: { "@type": "PostalAddress", addressLocality: project.location, addressCountry: "IN" },
-  }), [project.name, project.description, project.slug, project.price, project.location]);
 
   return (
     <>
