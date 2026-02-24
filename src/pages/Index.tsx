@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import SEO from "@/components/SEO";
 import HeroSection from "@/components/HeroSection";
 
@@ -11,7 +11,26 @@ const BlogPreview = lazy(() => import("@/components/BlogPreview"));
 const EnquirySection = lazy(() => import("@/components/EnquirySection"));
 const ContactSection = lazy(() => import("@/components/ContactSection"));
 
+/**
+ * Defer below-fold sections until the browser is idle.
+ * This prevents the Neon SDK + auth handshake from firing before LCP,
+ * keeping the critical path focused on hero image + CSS.
+ */
+const useDeferredRender = () => {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    const schedule = window.requestIdleCallback || ((cb: () => void) => setTimeout(cb, 200));
+    const id = schedule(() => setReady(true));
+    return () => {
+      if (window.cancelIdleCallback) window.cancelIdleCallback(id as number);
+    };
+  }, []);
+  return ready;
+};
+
 const Index = () => {
+  const showBelowFold = useDeferredRender();
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "RealEstateAgent",
@@ -37,15 +56,17 @@ const Index = () => {
         jsonLd={jsonLd}
       />
       <HeroSection />
-      <Suspense fallback={null}>
-        <AboutSection />
-        <FeaturedProjects />
-        <WhyChooseUs />
-        <TestimonialsSection />
-        <BlogPreview />
-        <EnquirySection />
-        <ContactSection />
-      </Suspense>
+      {showBelowFold && (
+        <Suspense fallback={null}>
+          <AboutSection />
+          <FeaturedProjects />
+          <WhyChooseUs />
+          <TestimonialsSection />
+          <BlogPreview />
+          <EnquirySection />
+          <ContactSection />
+        </Suspense>
+      )}
     </>
   );
 };

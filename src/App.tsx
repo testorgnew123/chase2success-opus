@@ -5,7 +5,6 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { useEffect, lazy, Suspense } from "react";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { neon } from "@/lib/neon";
 import Navbar from "./components/Navbar";
 import Index from "./pages/Index";
 
@@ -48,20 +47,22 @@ const ScrollToTop = () => {
   return null;
 };
 
-// Track page visits — deferred so it doesn't block initial render
+// Track page visits — deferred so it doesn't block initial render.
+// Uses dynamic import() so the Neon SDK stays out of the main bundle.
 const PageTracker = () => {
   const location = useLocation();
   useEffect(() => {
     if (location.pathname.startsWith("/admin")) return;
-    // Use requestIdleCallback (or setTimeout fallback) to avoid blocking the main thread
     const schedule = window.requestIdleCallback || ((cb: () => void) => setTimeout(cb, 1000));
     const id = schedule(() => {
-      neon.from("page_visits").insert({
-        path: location.pathname,
-        referrer: document.referrer || null,
-        user_agent: navigator.userAgent || null,
-      }).then(({ error }) => {
-        if (error) console.error("Failed to log visit:", error);
+      import("@/lib/neon").then(({ neon }) => {
+        neon.from("page_visits").insert({
+          path: location.pathname,
+          referrer: document.referrer || null,
+          user_agent: navigator.userAgent || null,
+        }).then(({ error }: { error: unknown }) => {
+          if (error) console.error("Failed to log visit:", error);
+        });
       });
     });
     return () => {

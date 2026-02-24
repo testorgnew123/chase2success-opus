@@ -1,5 +1,8 @@
 import { useState, useEffect, createContext, useContext, type ReactNode } from "react";
-import { neon } from "@/lib/neon";
+
+// Dynamic import keeps the Neon SDK out of the main bundle.
+// Auth is only needed on /admin routes, so public visitors never pay this cost.
+const getNeon = () => import("@/lib/neon").then((m) => m.neon);
 
 interface AuthContextType {
   user: { id: string; email: string } | null;
@@ -26,6 +29,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const checkAdminRole = async (userId: string) => {
     try {
+      const neon = await getNeon();
       const { data, error } = await neon
         .from("user_roles")
         .select("role")
@@ -43,6 +47,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (initialized) return;
     setInitialized(true);
     try {
+      const neon = await getNeon();
       const session = await neon.auth.getSession();
       if (session?.data?.user) {
         const u = session.data.user;
@@ -70,6 +75,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signIn = async (email: string, password: string) => {
     try {
+      const neon = await getNeon();
       const result = await neon.auth.signIn.email({ email, password });
       if (result.error) {
         return { error: result.error.message || "Sign in failed" };
@@ -87,6 +93,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signOut = async () => {
+    const neon = await getNeon();
     await neon.auth.signOut();
     setUser(null);
     setIsAdmin(false);
