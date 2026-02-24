@@ -29,24 +29,10 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks(id) {
-          if (id.includes("node_modules")) {
-            if (id.includes("react-dom") || id.includes("react-router-dom") || id.match(/\/react\//)) {
-              return "vendor";
-            }
-            if (id.includes("@radix-ui")) {
-              return "ui";
-            }
-            if (id.includes("@tanstack/react-query")) {
-              return "query";
-            }
-            if (id.includes("lucide-react")) {
-              return "icons";
-            }
-            if (id.includes("recharts") || id.includes("d3-") || id.includes("victory")) {
-              return "charts";
-            }
-          }
+        manualChunks: {
+          vendor: ["react", "react-dom", "react-router-dom"],
+          ui: ["@radix-ui/react-dialog", "@radix-ui/react-tooltip", "@radix-ui/react-popover", "@radix-ui/react-toast"],
+          query: ["@tanstack/react-query"],
         },
       },
     },
