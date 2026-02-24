@@ -17,22 +17,24 @@ const Counter = ({ target, suffix }: { target: number; suffix: string }) => {
       ([entry]) => {
         if (entry.isIntersecting && !counted.current) {
           counted.current = true;
-          const duration = 2000;
-          const steps = 60;
-          const increment = target / steps;
-          let current = 0;
-          const timer = setInterval(() => {
-            current += increment;
-            if (current >= target) {
-              setCount(target);
-              clearInterval(timer);
+          const duration = 1500;
+          let start: number | null = null;
+          const animate = (timestamp: number) => {
+            if (!start) start = timestamp;
+            const progress = Math.min((timestamp - start) / duration, 1);
+            // Ease-out cubic for smooth deceleration
+            const eased = 1 - Math.pow(1 - progress, 3);
+            setCount(Math.floor(eased * target));
+            if (progress < 1) {
+              requestAnimationFrame(animate);
             } else {
-              setCount(Math.floor(current));
+              setCount(target);
             }
-          }, duration / steps);
+          };
+          requestAnimationFrame(animate);
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0.3 }
     );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();

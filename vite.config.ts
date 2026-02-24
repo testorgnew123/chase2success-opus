@@ -33,6 +33,7 @@ export default defineConfig({
           vendor: ["react", "react-dom", "react-router-dom"],
           ui: ["@radix-ui/react-dialog", "@radix-ui/react-tooltip", "@radix-ui/react-popover", "@radix-ui/react-toast"],
           query: ["@tanstack/react-query"],
+          charts: ["recharts"],
         },
       },
     },

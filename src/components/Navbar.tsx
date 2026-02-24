@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ArrowUpRight } from "lucide-react";
-import logo from "@/assets/logo.png";
+import logoWebp from "@/assets/logo.webp";
+import logoPng from "@/assets/logo.png";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -20,7 +21,10 @@ const Navbar = () => {
       <div className="max-w-[1440px] mx-auto pr-2 sm:pr-10 lg:pr-16">
         <div className="flex items-center justify-between h-20 lg:h-24">
           <Link to="/" className="flex items-center h-20 lg:h-24">
-            <img src={logo} alt="CHASE2SUCCESS Logo" className="h-20 lg:h-24 w-auto object-contain" width={561} height={200} fetchPriority="high" decoding="async" />
+            <picture>
+              <source srcSet={logoWebp} type="image/webp" />
+              <img src={logoPng} alt="CHASE2SUCCESS Logo" className="h-20 lg:h-24 w-auto object-contain" width={561} height={200} fetchPriority="high" decoding="async" />
+            </picture>
           </Link>
 
           {/* Desktop Nav */}

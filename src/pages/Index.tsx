@@ -1,9 +1,9 @@
 import { lazy, Suspense } from "react";
 import SEO from "@/components/SEO";
 import HeroSection from "@/components/HeroSection";
-import AboutSection from "@/components/AboutSection";
 
 // Lazy-load below-the-fold sections to reduce initial bundle size
+const AboutSection = lazy(() => import("@/components/AboutSection"));
 const FeaturedProjects = lazy(() => import("@/components/FeaturedProjects"));
 const WhyChooseUs = lazy(() => import("@/components/WhyChooseUs"));
 const TestimonialsSection = lazy(() => import("@/components/TestimonialsSection"));
@@ -37,8 +37,8 @@ const Index = () => {
         jsonLd={jsonLd}
       />
       <HeroSection />
-      <AboutSection />
       <Suspense fallback={null}>
+        <AboutSection />
         <FeaturedProjects />
         <WhyChooseUs />
         <TestimonialsSection />
