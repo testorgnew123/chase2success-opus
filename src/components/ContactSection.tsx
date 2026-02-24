@@ -4,7 +4,7 @@ const contacts = [
   {
     icon: MapPin,
     title: "Visit Us",
-    lines: ["123 Business Tower, Golf Course Road", "Gurugram, Haryana 122002"],
+    lines: ["S NO. FF-51 First Floor, Riviera Manhattan, Plot No. 1-8, Ramchandrapura, Mahal Road, Jagatpura, Jaipur, Rajasthan 302017"],
   },
   {
     icon: Phone,

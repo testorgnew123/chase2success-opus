@@ -6,6 +6,7 @@ import { optimizeCloudinaryUrl } from "@/lib/cloudinary";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import { useMemo } from "react";
+import fallbackBlog1 from "@/assets/blog-1.jpg";
 
 const BlogDetail = () => {
   const { slug } = useParams();
@@ -54,11 +55,9 @@ const BlogDetail = () => {
           <ArrowLeft className="w-4 h-4" /> Back to Blog
         </Link>
 
-        {post.image_url && (
-          <div className="rounded-lg overflow-hidden aspect-[16/9] mb-8">
-            <img src={optimizeCloudinaryUrl(post.image_url, { width: 900 })} alt={post.title} className="w-full h-full object-cover" loading="eager" decoding="async" />
-          </div>
-        )}
+        <div className="rounded-lg overflow-hidden aspect-[16/9] mb-8">
+          <img src={post.image_url ? optimizeCloudinaryUrl(post.image_url, { width: 900 }) : fallbackBlog1} alt={post.title} className="w-full h-full object-cover" loading="eager" decoding="async" />
+        </div>
 
         <div className="flex items-center gap-4 mb-6 text-sm text-foreground/80 font-sans">
           <span className="text-primary uppercase tracking-wider text-xs font-semibold">{post.category}</span>

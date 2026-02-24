@@ -76,8 +76,8 @@ const Footer = memo(() => {
           <div className="lg:col-span-3 space-y-5">
             <h4 className="text-xs font-sans font-semibold tracking-[0.2em] uppercase text-foreground">Contact Info</h4>
             <div className="space-y-3 text-sm text-foreground/80 font-sans">
-              <p>123 Business Tower, Golf Course Road</p>
-              <p>Gurugram, Haryana 122002</p>
+              <p>S NO. FF-51 First Floor, Riviera Manhattan, Plot No. 1-8, Ramchandrapura, Mahal Road</p>
+              <p>Jagatpura, Jaipur, Rajasthan 302017</p>
               <a href="tel:+919872404280" className="hover:text-primary transition-colors block">+91 9872404280</a>
               <a href="mailto:info@chase2success.com" className="hover:text-primary transition-colors block">info@chase2success.com</a>
               <p>RERA Reg. No: RAJ/P/2019/942</p>
