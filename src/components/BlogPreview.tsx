@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useBlogs } from "@/hooks/useBlogs";
+import { optimizeCloudinaryUrl } from "@/lib/cloudinary";
 
 const BlogPreview = () => {
   const { data: blogPosts, isLoading } = useBlogs();
@@ -34,7 +35,7 @@ const BlogPreview = () => {
           <Link to={`/blog/${featured.slug}`} className="lg:col-span-7 group block">
             {featured.image_url && (
               <div className="relative aspect-[16/10] overflow-hidden mb-6">
-                <img src={featured.image_url} alt={featured.title} className="w-full h-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105" loading="lazy" />
+                <img src={optimizeCloudinaryUrl(featured.image_url, { width: 800 })} alt={featured.title} className="w-full h-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105" loading="lazy" decoding="async" />
               </div>
             )}
             <p className="text-[10px] tracking-[0.25em] uppercase font-sans text-primary/60 mb-3">{featured.category}</p>
@@ -47,7 +48,7 @@ const BlogPreview = () => {
               <Link key={post.id} to={`/blog/${post.slug}`} className="group flex gap-5 py-6 first:pt-0 last:pb-0">
                 {post.image_url && (
                   <div className="relative overflow-hidden w-24 h-24 flex-shrink-0">
-                    <img src={post.image_url} alt={post.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
+                    <img src={optimizeCloudinaryUrl(post.image_url, { width: 200 })} alt={post.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" decoding="async" />
                   </div>
                 )}
                 <div className="flex-1">

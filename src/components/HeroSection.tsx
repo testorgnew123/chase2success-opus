@@ -77,6 +77,10 @@ const HeroSection = () => {
             alt="Luxury real estate development by CHASE2SUCCESS"
             className="w-full h-full object-cover"
             loading="eager"
+            fetchPriority="high"
+            decoding="async"
+            width={1920}
+            height={1080}
           />
           {/* Subtle warm overlay */}
           <div className="absolute inset-0 bg-gradient-to-l from-transparent to-background/20 hidden lg:block" />

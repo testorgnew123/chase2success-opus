@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { MapPin, ArrowRight } from "lucide-react";
 import { useProjects, type DbProject } from "@/hooks/useProjects";
 import SEO from "@/components/SEO";
+import { optimizeCloudinaryUrl } from "@/lib/cloudinary";
 
 const ProjectsPage = () => {
   const { data: projects, isLoading } = useProjects();
@@ -42,10 +43,12 @@ const ProjectsPage = () => {
       {/* Hero / Featured Project */}
       <section className="relative h-[70vh] min-h-[500px] flex items-end overflow-hidden">
         <img
-          src={featured.image_url}
+          src={optimizeCloudinaryUrl(featured.image_url, { width: 1440 })}
           alt={`${featured.name} - ${featured.type}`}
           className="absolute inset-0 w-full h-full object-cover"
           loading="eager"
+          fetchPriority="high"
+          decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10" />
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pb-16 md:pb-20">
@@ -111,10 +114,11 @@ const ProjectCardLarge = ({ project }: { project: DbProject }) => (
   <Link to={`/projects/${project.slug}`} className="group block">
     <div className="relative overflow-hidden rounded-sm aspect-[3/4] md:aspect-[4/5]">
       <img
-        src={project.image_url}
+        src={optimizeCloudinaryUrl(project.image_url, { width: 700 })}
         alt={`${project.name} - ${project.type}`}
         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         loading="lazy"
+        decoding="async"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
       <div className="absolute top-5 left-5">
@@ -144,10 +148,11 @@ const ProjectCardCompact = ({ project }: { project: DbProject }) => (
     <div className="overflow-hidden rounded-sm">
       <div className="relative aspect-[4/3] overflow-hidden">
         <img
-          src={project.image_url}
+          src={optimizeCloudinaryUrl(project.image_url, { width: 500 })}
           alt={`${project.name} - ${project.type}`}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           loading="lazy"
+          decoding="async"
         />
         <div className="absolute top-4 left-4">
           <span className="gold-gradient text-primary-foreground text-[10px] font-semibold px-3 py-1 rounded-sm uppercase tracking-widest">

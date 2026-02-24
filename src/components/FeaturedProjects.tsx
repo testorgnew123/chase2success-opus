@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, MapPin } from "lucide-react";
 import { useProjects } from "@/hooks/useProjects";
+import { optimizeCloudinaryUrl } from "@/lib/cloudinary";
 
 const FeaturedProjects = () => {
   const { data: projects, isLoading } = useProjects();
@@ -58,10 +59,11 @@ const FeaturedProjects = () => {
           <Link to={`/projects/${featured.slug}`} className="lg:col-span-7 group block">
             <div className="relative overflow-hidden aspect-[4/5] lg:aspect-[3/4]">
               <img
-                src={featured.image_url}
+                src={optimizeCloudinaryUrl(featured.image_url, { width: 800 })}
                 alt={`${featured.name} - ${featured.type}`}
                 className="w-full h-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105"
                 loading="lazy"
+                decoding="async"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/10 to-transparent" />
               <div className="absolute top-6 left-6">
@@ -97,10 +99,11 @@ const FeaturedProjects = () => {
               >
                 <div className="relative overflow-hidden w-28 h-28 md:w-36 md:h-36 flex-shrink-0">
                   <img
-                    src={project.image_url}
+                    src={optimizeCloudinaryUrl(project.image_url, { width: 300 })}
                     alt={`${project.name} - ${project.type}`}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     loading="lazy"
+                    decoding="async"
                   />
                 </div>
                 <div className="flex-1 py-1">

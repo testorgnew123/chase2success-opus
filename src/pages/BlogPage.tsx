@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useBlogs } from "@/hooks/useBlogs";
 import SEO from "@/components/SEO";
+import { optimizeCloudinaryUrl } from "@/lib/cloudinary";
 
 const BlogPage = () => {
   const { data: blogPosts, isLoading } = useBlogs();
@@ -33,7 +34,7 @@ const BlogPage = () => {
               <Link key={post.id} to={`/blog/${post.slug}`} className="group bg-card border border-border rounded-lg overflow-hidden transition-all duration-500 hover:border-primary/50 hover:gold-glow">
                 {post.image_url && (
                   <div className="aspect-[16/9] overflow-hidden">
-                    <img src={post.image_url} alt={post.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
+                    <img src={optimizeCloudinaryUrl(post.image_url, { width: 700 })} alt={post.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" decoding="async" />
                   </div>
                 )}
                 <div className="p-6 space-y-3">

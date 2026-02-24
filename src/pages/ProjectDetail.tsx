@@ -9,6 +9,7 @@ import { useProject } from "@/hooks/useProjects";
 import SEO from "@/components/SEO";
 import EnquirySection from "@/components/EnquirySection";
 import { getAmenityIcon } from "@/data/amenities";
+import { optimizeCloudinaryUrl } from "@/lib/cloudinary";
 
 /* ─── Fullscreen Gallery Lightbox ─── */
 const GalleryLightbox = ({
@@ -112,7 +113,7 @@ const GalleryLightbox = ({
         onTouchEnd={onTouchEnd}
       >
         <img
-          src={images[current]}
+          src={optimizeCloudinaryUrl(images[current], { width: 1600 })}
           alt={`Gallery image ${current + 1}`}
           className="max-w-full max-h-full object-contain select-none"
           draggable={false}
@@ -249,7 +250,7 @@ const ProjectDetail = () => {
           </div>
 
           <div className="relative h-[45vh] lg:h-auto order-1 lg:order-2 overflow-hidden">
-            <img src={project.image_url} alt={`${project.name} in ${project.location}`} className="w-full h-full object-cover object-center" loading="eager" />
+            <img src={optimizeCloudinaryUrl(project.image_url, { width: 1200 })} alt={`${project.name} in ${project.location}`} className="w-full h-full object-cover object-center" loading="eager" fetchPriority="high" decoding="async" />
             <div className="absolute inset-0 bg-gradient-to-l from-transparent to-background/20 hidden lg:block" />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent lg:hidden" />
             <div className="absolute bottom-6 right-6 lg:bottom-10 lg:right-10 bg-background/90 backdrop-blur-sm px-5 py-3 border border-border">
@@ -306,7 +307,7 @@ const ProjectDetail = () => {
                   onClick={() => setLightboxIndex(i)}
                   className="rounded-lg overflow-hidden aspect-[4/3] cursor-pointer group"
                 >
-                  <img src={img} alt={`${project.name} gallery image ${i + 1}`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+                  <img src={optimizeCloudinaryUrl(img, { width: 500 })} alt={`${project.name} gallery image ${i + 1}`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" decoding="async" />
                 </button>
               ))}
             </div>

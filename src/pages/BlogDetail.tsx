@@ -2,6 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Calendar, User } from "lucide-react";
 import { useBlog } from "@/hooks/useBlogs";
 import SEO from "@/components/SEO";
+import { optimizeCloudinaryUrl } from "@/lib/cloudinary";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import { useMemo } from "react";
@@ -55,7 +56,7 @@ const BlogDetail = () => {
 
         {post.image_url && (
           <div className="rounded-lg overflow-hidden aspect-[16/9] mb-8">
-            <img src={post.image_url} alt={post.title} className="w-full h-full object-cover" />
+            <img src={optimizeCloudinaryUrl(post.image_url, { width: 900 })} alt={post.title} className="w-full h-full object-cover" loading="eager" decoding="async" />
           </div>
         )}
 

@@ -12,6 +12,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
           alt={`${project.name} - ${project.type} in ${project.location}`}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           loading="lazy"
+          decoding="async"
         />
         <div className="absolute top-4 left-4">
           <span className="gold-gradient text-primary-foreground text-xs font-semibold px-3 py-1 rounded-sm uppercase tracking-wider">
