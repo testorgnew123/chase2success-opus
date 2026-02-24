@@ -9,7 +9,7 @@ export interface Testimonial {
 export const testimonials: Testimonial[] = [
   {
     id: "1",
-    name: "Rajesh Malhotra",
+    name: "Ankit Agrawal",
     designation: "Business Owner, Delhi",
     content: "CHASE2SUCCESS made my first real estate investment seamless and highly rewarding. Their transparency and market knowledge gave me complete confidence. My plot has already appreciated 40% in just two years.",
     rating: 5,
@@ -23,7 +23,7 @@ export const testimonials: Testimonial[] = [
   },
   {
     id: "3",
-    name: "Amit & Sunita Verma",
+    name: "Akshat Singhal",
     designation: "NRI Investors, Dubai",
     content: "Investing from abroad was worry-free with CHASE2SUCCESS. Their end-to-end support, video calls for site visits, and transparent documentation made it feel like we were right there. Outstanding service.",
     rating: 5,
