@@ -1,4 +1,5 @@
-/* Fonts loaded via <link> in index.html for faster discovery */
+/* Self-hosted fonts — eliminates Google Fonts waterfall chain */
+@import './assets/fonts/fonts.css';
 
 @tailwind base;
 @tailwind components;

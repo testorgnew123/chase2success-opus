@@ -14,13 +14,7 @@
     <meta property="og:site_name" content="CHASE2SUCCESS" />
 
     <!-- Preconnect to external origins for faster resource loading -->
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
-
-    <!-- Google Fonts — deferred until after FCP to avoid blocking render on mobile -->
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Montserrat:wght@400;600&display=swap" /></noscript>
 
     <!-- Inline critical CSS for instant FCP — covers body, navbar, and hero shell -->
     <style>
@@ -28,15 +22,6 @@
       #root{min-height:100vh}
       nav.fixed{position:fixed;top:0;left:0;right:0;z-index:50}
     </style>
-
-    <!-- Load Google Fonts after first paint via JS -->
-    <script>
-      addEventListener('DOMContentLoaded',function(){
-        var l=document.createElement('link');l.rel='stylesheet';
-        l.href='https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Montserrat:wght@400;600&display=swap';
-        document.head.appendChild(l);
-      });
-    </script>
 
     <meta name="twitter:card" content="summary_large_image" />
     
