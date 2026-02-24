@@ -78,9 +78,18 @@ const ContactSection = () => {
               })}
             </div>
 
-            {/* Map Placeholder */}
-            <div className="mt-8 border border-border h-56 flex items-center justify-center">
-              <p className="text-foreground/80 font-sans text-sm">Map will be embedded here</p>
+            {/* Office Location Map */}
+            <div className="mt-8 border border-border overflow-hidden">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3561.7591251446015!2d75.862954!3d26.7839471!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396dc9a782efd35f%3A0x81ea6e515dc9956f!2sManhattan%20Riviera!5e0!3m2!1sen!2sin!4v1771950374379!5m2!1sen!2sin"
+                width="100%"
+                height="224"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="CHASE2SUCCESS Office Location"
+              />
             </div>
           </div>
         </div>
