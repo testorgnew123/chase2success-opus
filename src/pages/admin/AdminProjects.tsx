@@ -52,9 +52,14 @@ const AdminProjects = () => {
     let processedFile = file;
     if (file.size > maxSize) {
       toast({ title: "Compressing image", description: `Image is ${(file.size / 1024 / 1024).toFixed(1)} MB. Compressing to fit under 10 MB...` });
-      processedFile = await compressImage(file, maxSize);
-      const savedPct = ((1 - processedFile.size / file.size) * 100).toFixed(0);
-      toast({ title: "Compression done", description: `Reduced from ${(file.size / 1024 / 1024).toFixed(1)} MB to ${(processedFile.size / 1024 / 1024).toFixed(1)} MB (${savedPct}% smaller)` });
+      try {
+        processedFile = await compressImage(file, maxSize);
+        const savedPct = ((1 - processedFile.size / file.size) * 100).toFixed(0);
+        toast({ title: "Compression done", description: `Reduced from ${(file.size / 1024 / 1024).toFixed(1)} MB to ${(processedFile.size / 1024 / 1024).toFixed(1)} MB (${savedPct}% smaller)` });
+      } catch {
+        toast({ title: "Compression skipped", description: "Could not compress image. Uploading original file.", variant: "destructive" });
+        processedFile = file;
+      }
     }
     const url = await uploadToCloudinary(processedFile, "project-images");
     if (!url) {

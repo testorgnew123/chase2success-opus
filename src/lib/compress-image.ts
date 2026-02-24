@@ -50,6 +50,9 @@ function loadImage(file: File): Promise<HTMLImageElement> {
   });
 }
 
+// Clamp to safe canvas limit to avoid browser crashes on huge images
+const MAX_CANVAS_DIM = 4096;
+
 function canvasToFile(
   img: HTMLImageElement,
   width: number,
@@ -58,6 +61,13 @@ function canvasToFile(
   fileName: string
 ): Promise<File> {
   return new Promise((resolve, reject) => {
+    // Clamp dimensions to avoid exceeding browser canvas limits
+    if (width > MAX_CANVAS_DIM || height > MAX_CANVAS_DIM) {
+      const scale = Math.min(MAX_CANVAS_DIM / width, MAX_CANVAS_DIM / height);
+      width = Math.round(width * scale);
+      height = Math.round(height * scale);
+    }
+
     const canvas = document.createElement("canvas");
     canvas.width = width;
     canvas.height = height;
@@ -76,14 +86,20 @@ function canvasToFile(
     canvas.toBlob(
       (blob) => {
         if (!blob) {
-          reject(new Error("Canvas toBlob failed"));
+          // Fallback: try PNG if JPEG toBlob returns null
+          canvas.toBlob(
+            (pngBlob) => {
+              if (!pngBlob) {
+                reject(new Error("Canvas toBlob failed — image may be in an unsupported format"));
+                return;
+              }
+              resolve(new File([pngBlob], fileName, { type: "image/png", lastModified: Date.now() }));
+            },
+            "image/png"
+          );
           return;
         }
-        const compressed = new File([blob], fileName, {
-          type: "image/jpeg",
-          lastModified: Date.now(),
-        });
-        resolve(compressed);
+        resolve(new File([blob], fileName, { type: "image/jpeg", lastModified: Date.now() }));
       },
       "image/jpeg",
       quality
