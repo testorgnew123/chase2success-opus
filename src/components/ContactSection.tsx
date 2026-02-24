@@ -4,26 +4,28 @@ const contacts = [
   {
     icon: MapPin,
     title: "Visit Us",
-    lines: ["S NO. FF-51 First Floor, Riviera Manhattan, Plot No. 1-8, Ramchandrapura, Mahal Road, Jagatpura, Jaipur, Rajasthan 302017"],
+    lines: [{ text: "S NO. FF-51 First Floor, Riviera Manhattan, Plot No. 1-8, Ramchandrapura, Mahal Road, Jagatpura, Jaipur, Rajasthan 302017" }],
   },
   {
     icon: Phone,
     title: "Call Us",
-    lines: ["+91 9872404280", "+91 9887349448"],
-    href: "tel:+919872404280",
+    lines: [
+      { text: "+91 9872404280", href: "tel:+919872404280" },
+      { text: "+91 9887349448", href: "tel:+919887349448" },
+    ],
   },
   {
     icon: MessageCircle,
     title: "WhatsApp",
-    lines: ["+91 9872404280", "+91 9887349448"],
-    href: "https://wa.me/919872404280",
+    lines: [
+      { text: "+91 9872404280", href: "https://wa.me/919872404280" },
+      { text: "+91 9887349448", href: "https://wa.me/919887349448" },
+    ],
   },
-
   {
     icon: Mail,
     title: "Email Us",
-    lines: ["info@chase2success.com"],
-    href: "mailto:info@chase2success.com",
+    lines: [{ text: "info@chase2success.com", href: "mailto:info@chase2success.com" }],
   },
 ];
 
@@ -52,31 +54,36 @@ const ContactSection = () => {
           {/* Right — contact cards */}
           <div className="lg:col-span-8">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {contacts.map((c) => {
-                const Wrapper = c.href ? "a" : "div";
-                const wrapperProps = c.href
-                  ? { href: c.href, target: c.href.startsWith("http") ? "_blank" : undefined, rel: c.href.startsWith("http") ? "noopener noreferrer" : undefined }
-                  : {};
-                return (
-                  <Wrapper
-                    key={c.title}
-                    {...(wrapperProps as any)}
-                    className="group border border-border p-6 hover:border-primary/30 transition-colors block"
-                  >
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 flex items-center justify-center border border-primary/20 group-hover:border-primary/40 transition-colors">
-                        <c.icon className="w-4 h-4 text-primary" />
-                      </div>
-                      <h3 className="font-serif font-bold text-foreground text-sm">{c.title}</h3>
+              {contacts.map((c) => (
+                <div
+                  key={c.title}
+                  className="group border border-border p-6 hover:border-primary/30 transition-colors"
+                >
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 flex items-center justify-center border border-primary/20 group-hover:border-primary/40 transition-colors">
+                      <c.icon className="w-4 h-4 text-primary" />
                     </div>
-                    {c.lines.map((line, i) => (
+                    <h3 className="font-serif font-bold text-foreground text-sm">{c.title}</h3>
+                  </div>
+                  {c.lines.map((line, i) =>
+                    line.href ? (
+                      <a
+                        key={i}
+                        href={line.href}
+                        target={line.href.startsWith("http") ? "_blank" : undefined}
+                        rel={line.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                        className="block text-sm text-foreground/80 font-sans leading-relaxed hover:text-primary transition-colors"
+                      >
+                        {line.text}
+                      </a>
+                    ) : (
                       <p key={i} className="text-sm text-foreground/80 font-sans leading-relaxed">
-                        {line}
+                        {line.text}
                       </p>
-                    ))}
-                  </Wrapper>
-                );
-              })}
+                    )
+                  )}
+                </div>
+              ))}
             </div>
 
             {/* Office Location Map */}

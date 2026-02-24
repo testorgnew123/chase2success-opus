@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, memo } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { prefetchRoute } from "@/App";
@@ -16,14 +16,11 @@ const navLinks = [
 const Navbar = memo(() => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolledDown, setScrolledDown] = useState(false);
-  const lastScrollY = useRef(0);
   const location = useLocation();
 
-  // Hide logo on mobile when scrolling down
+  // Hide logo on mobile when not at top of page
   const handleScroll = useCallback(() => {
-    const currentY = window.scrollY;
-    setScrolledDown(currentY > 20 && currentY > lastScrollY.current);
-    lastScrollY.current = currentY;
+    setScrolledDown(window.scrollY > 20);
   }, []);
 
   useEffect(() => {
