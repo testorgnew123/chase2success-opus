@@ -7,9 +7,11 @@ import { useEffect, lazy, Suspense } from "react";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { neon } from "@/lib/neon";
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-import WhatsAppFloat from "./components/WhatsAppFloat";
 import Index from "./pages/Index";
+
+// Lazy-load below-fold / non-critical shell components
+const Footer = lazy(() => import("./components/Footer"));
+const WhatsAppFloat = lazy(() => import("./components/WhatsAppFloat"));
 
 // Lazy-load non-critical routes for faster initial page load
 const ProjectsPage = lazy(() => import("./pages/ProjectsPage"));
@@ -92,8 +94,10 @@ const PublicLayout = () => (
         </Routes>
       </Suspense>
     </main>
-    <Footer />
-    <WhatsAppFloat />
+    <Suspense fallback={null}>
+      <Footer />
+      <WhatsAppFloat />
+    </Suspense>
   </>
 );
 

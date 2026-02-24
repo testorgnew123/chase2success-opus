@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useProjects } from "@/hooks/useProjects";
-import logo from "@/assets/logo.png";
+import logoWebp from "@/assets/logo.webp";
+import logoPng from "@/assets/logo.png";
 
 const Footer = () => {
   const { data: projects } = useProjects();
@@ -11,7 +12,10 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
           {/* Brand */}
           <div className="lg:col-span-4 space-y-5">
-            <img src={logo} alt="CHASE2SUCCESS Logo" className="h-16 w-auto" width={561} height={200} loading="lazy" decoding="async" />
+            <picture>
+              <source srcSet={logoWebp} type="image/webp" />
+              <img src={logoPng} alt="CHASE2SUCCESS Logo" className="h-16 w-auto" width={561} height={200} loading="lazy" decoding="async" />
+            </picture>
             <p className="font-editorial text-base text-foreground/80 leading-relaxed max-w-sm">
               Premium luxury real estate advisory, connecting discerning investors with exceptional
               properties across India.
