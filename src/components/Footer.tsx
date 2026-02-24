@@ -79,6 +79,7 @@ const Footer = memo(() => {
               <p>S NO. FF-51 First Floor, Riviera Manhattan, Plot No. 1-8, Ramchandrapura, Mahal Road</p>
               <p>Jagatpura, Jaipur, Rajasthan 302017</p>
               <a href="tel:+919872404280" className="hover:text-primary transition-colors block">+91 9872404280</a>
+              <a href="tel:+919887349448" className="hover:text-primary transition-colors block">+91 9887349448</a>
               <a href="mailto:info@chase2success.com" className="hover:text-primary transition-colors block">info@chase2success.com</a>
               <p>RERA Reg. No: RAJ/P/2019/942</p>
             </div>
