@@ -16,7 +16,7 @@ import { AMENITY_NAMES, getAmenityIcon } from "@/data/amenities";
 
 const emptyProject = {
   name: "", slug: "", location: "", price: "", description: "", short_description: "",
-  image_url: "", type: "", status: "draft", area: "", rera_number: "", brochure_url: "", map_url: "", is_featured: false, amenities: [] as string[], gallery: [] as string[],
+  image_url: "", type: "", status: "draft", display_status: "Upcoming", area: "", rera_number: "", brochure_url: "", map_url: "", is_featured: false, amenities: [] as string[], gallery: [] as string[],
 };
 
 const AdminProjects = () => {
@@ -42,7 +42,7 @@ const AdminProjects = () => {
   const openNew = () => { setEditing(null); setForm(emptyProject); setAmenitiesStr(""); setOpen(true); };
   const openEdit = (p: Project) => {
     setEditing(p);
-    setForm({ name: p.name, slug: p.slug, location: p.location, price: p.price, description: p.description, short_description: p.short_description, image_url: p.image_url, type: p.type, status: p.status, area: p.area, rera_number: p.rera_number, brochure_url: p.brochure_url ?? "", map_url: p.map_url ?? "", is_featured: p.is_featured ?? false, amenities: p.amenities ?? [], gallery: p.gallery ?? [] });
+    setForm({ name: p.name, slug: p.slug, location: p.location, price: p.price, description: p.description, short_description: p.short_description, image_url: p.image_url, type: p.type, status: p.status, display_status: p.display_status || "Upcoming", area: p.area, rera_number: p.rera_number, brochure_url: p.brochure_url ?? "", map_url: p.map_url ?? "", is_featured: p.is_featured ?? false, amenities: p.amenities ?? [], gallery: p.gallery ?? [] });
     setAmenitiesStr((p.amenities ?? []).join(", "));
     setOpen(true);
   };
@@ -189,14 +189,24 @@ const AdminProjects = () => {
                 <div className="space-y-2"><Label>Location</Label><Input value={form.location} onChange={e => setForm(f => ({...f, location: e.target.value}))} /></div>
                 <div className="space-y-2"><Label>Price</Label><Input value={form.price} onChange={e => setForm(f => ({...f, price: e.target.value}))} /></div>
               </div>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2"><Label>Type</Label><Input value={form.type} onChange={e => setForm(f => ({...f, type: e.target.value}))} /></div>
                 <div className="space-y-2"><Label>Area</Label><Input value={form.area} onChange={e => setForm(f => ({...f, area: e.target.value}))} /></div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Status</Label>
                   <select className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm" value={form.status} onChange={e => setForm(f => ({...f, status: e.target.value}))}>
                     <option value="draft">Draft</option>
                     <option value="published">Published</option>
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Display Status</Label>
+                  <select className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm" value={form.display_status} onChange={e => setForm(f => ({...f, display_status: e.target.value}))}>
+                    <option value="Booking">Booking</option>
+                    <option value="Sold Out">Sold Out</option>
+                    <option value="Upcoming">Upcoming</option>
                   </select>
                 </div>
               </div>
@@ -390,6 +400,7 @@ const AdminProjects = () => {
             <th className="text-left p-3 font-sans font-medium">Location</th>
             <th className="text-left p-3 font-sans font-medium">Price</th>
             <th className="text-left p-3 font-sans font-medium">Status</th>
+            <th className="text-left p-3 font-sans font-medium">Display Status</th>
             <th className="text-center p-3 font-sans font-medium">Featured</th>
             <th className="text-right p-3 font-sans font-medium">Actions</th>
           </tr></thead>
@@ -400,6 +411,7 @@ const AdminProjects = () => {
                 <td className="p-3 text-muted-foreground">{p.location}</td>
                 <td className="p-3 text-primary font-medium">{p.price}</td>
                 <td className="p-3"><span className={`text-xs px-2 py-1 rounded-full ${p.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>{p.status}</span></td>
+                <td className="p-3"><span className={`text-xs px-2 py-1 rounded-full ${p.display_status === 'Sold Out' ? 'bg-red-100 text-red-800' : p.display_status === 'Booking' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}`}>{p.display_status || 'Upcoming'}</span></td>
                 <td className="p-3 text-center">
                   <button
                     onClick={async () => {
@@ -419,7 +431,7 @@ const AdminProjects = () => {
                 </td>
               </tr>
             ))}
-            {projects.length === 0 && <tr><td colSpan={6} className="p-6 text-center text-muted-foreground">No projects yet</td></tr>}
+            {projects.length === 0 && <tr><td colSpan={7} className="p-6 text-center text-muted-foreground">No projects yet</td></tr>}
           </tbody>
         </table>
       </div>
