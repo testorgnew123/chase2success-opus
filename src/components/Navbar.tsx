@@ -34,7 +34,7 @@ const Navbar = memo(() => {
   }, [location.pathname]);
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolledDown && !isOpen ? "max-lg:bg-transparent max-lg:backdrop-blur-none" : "bg-background/80 backdrop-blur-xl"}`}>
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 lg:bg-white lg:shadow-sm ${isOpen ? "bg-background" : "bg-transparent"}`}>
       <div className="max-w-[1440px] mx-auto pr-2 sm:pr-10 lg:pr-16">
         <div className={`flex items-center justify-between transition-all duration-300 ${scrolledDown && !isOpen ? "max-lg:h-12" : "h-20"} lg:h-24`}>
           <Link to="/" className={`flex items-center h-20 lg:h-24 transition-all duration-300 ${scrolledDown ? "max-lg:opacity-0 max-lg:w-0 max-lg:overflow-hidden max-lg:pointer-events-none" : "opacity-100"}`}>
